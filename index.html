@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- TODO: Change title -->
     <title>Data Admin Visualizations</title>
 
     <!-- Load Bulma from CDN (consider saving it to repository instead) -->
@@ -90,7 +89,6 @@
 
         <!-- Right navbar items -->
         <div class="navbar-end">
-          <!-- TODO: Update as needed -->
           <a class="navbar-item" href="#about" title="About">
             <span class="icon"><i class="fas fa-tasks"></i></span>
             <span>Grade</span>
@@ -111,7 +109,6 @@
       <!-- Begin page content -->
       <div class="content">
         <h1 class="title">
-          <!-- TODO: Change page title -->
           <strong>Page Overview</strong>
         </h1>
         <p> You are currently viewing the home page. Here, you will find links to our visualizations, a little bio on each of the team members behind this page,
@@ -128,173 +125,43 @@
           <cite>Put a citation here, possibly link to the dataset license information directly.</cite>
         </blockquote>
 
-        <p>In addition to including a link to the source and license, you should describe the data. You might want a list of some sort to enumerate the different types of columns:</p>
 
-        <ol>
-          <li><strong>Column Name:</strong> Give a description of the column, including its type and possible range of values.</li>
 
-          <li><strong>Column Name:</strong> Give a description of the column, including its type and possible range of values.</li>
+        <h2 id="data">Dataset</h2>
 
-          <li><strong>Column Name:</strong> Give a description of the column, including its type and possible range of values.</li>
 
-          <li><strong>Column Name:</strong> Give a description of the column, including its type and possible range of values.</li>
-        </ol>
 
-        <p>This will of course differ depending on the assignment and data.</p>
+<p> Proper attribution for the original dataset. You will need to look at the original dataset page for how to give proper attribution. (This should include a link to the original data!*
 
-        <h3 id="wrangling">Wrangling</h3>
+The dataset license for the original dataset.
 
-        <p>Perhaps you had to do some data wrangling to the original dataset to prepare it for visualization. This would be a great place to discuss some of that wrangling.
+The dataset size (number of columns and rows).
 
-        <pre>
-You can even put code into these pre blocks.
-  It will preserve whitespace.
-    That is helpful for formatted code.
-        </pre>
+The relevant columns from the original dataset, giving descriptions with the data types, possible values for categorical data, or the range of values (and possibly other simple statistics) for numerical columns.
 
-        <p>You can alternatively embed a Gist if you want. There is an "embed" button on <a href="https://gist.github.com/octocat/6cad326836d38bd3a7ae">the Gist page</a> and results in something like this:</p>
+Any shared processing or filtering done to the original dataset. Include enough detail that this process is repeatable by someone starting with the original dataset. If possible, link directly to the processed version of the data.</p> 
 
-        <script src="https://gist.github.com/octocat/6cad326836d38bd3a7ae.js"></script>
 
-        <h2 id="visualizations">Visualizations</h2>
-
-        <p>Ideally not everything would be on a single page like this example. Instead, you might want to put each section in its own webpage. You would need to carefully replicate the page template (with the header, navbar, and footer) and make the necessary updates. For example, you want the "About" navbar item to be considered active on an "About" web page.</p>
-
-        <p>For now this is just a demo. The buttons below do not go anywhere, but can be easily changed to link to different visualization pages.</p>
-
-        <p class="buttons">
-          <a class="button is-large is-success" href="#">
-            <span class="icon is-medium">
-              <i class="fas fa-chart-line"></i>
-            </span>
-            <span>Line Chart</span>
-          </a>
-
-          <a class="button is-large is-primary" href="#">
-            <span class="icon is-medium">
-              <i class="fas fa-chart-area"></i>
-            </span>
-            <span>Area Chart</span>
-          </a>
-
-          <a class="button is-large is-info" href="#">
-            <span class="icon is-medium">
-              <i class="fas fa-chart-bar"></i>
-            </span>
-            <span>Bar Chart</span>
-          </a>
-
-          <a class="button is-large is-link" href="#">
-            <span class="icon is-medium">
-              <i class="fas fa-chart-pie"></i>
-            </span>
-            <span>Pie Chart</span>
-          </a>
-        </p>
-
-        <!-- https://github.com/vega/vega-embed#basic-example -->
-        <p>It is possible to embed some visualizations directly here too. Here is <a href="https://github.com/vega/vega-embed#basic-example">an example</a> using Vega-Lite:</p>
-
-        <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
-
-        <div id="vis"></div>
-
-        <script type="text/javascript">
-        var spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
-        vegaEmbed('#vis', spec).then(function(result) {
-          // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-        }).catch(console.error);
-        </script>
-
-        <h4>Instructions</h4>
-
-        <p>You will likely need to include instructions on how to interpet and use the visualization. In the case above, if you click the three dots <i class="fas fa-ellipsis-h has-text-grey-light	"></i> above it will open a menu where you can either save the visualization to a SVG or PNG, or alternatively open it up in the online Vega Editor.</p>
-
-        <h4>Discussion</h4>
-
-        <p>You may also need other sections, like a discussion section, per-visualization section on data wrangling, and others. Because of the extra content and code visualizations take, it might be worthwhile to break up your pages into one home page and then one page per visualization.</p>
-
-        <span class="heading">Acknowledgements</span>
-
-        <p>
-          <a href="#">Link to insiration</a><br/>
-          <a href="#">Link to StackOverflow snippet</a>
-        </p>
-
-        <p class="is-6">
-          <em>Thanks to Person Name for their suggestion to do something with the visualization.</em>
-        </p>
-
-        <h2 id="grade">Grade</h2>
-
-        <!-- TODO: Remove custom style if no longer needed -->
-        <style>
-          table.grades tbody tr td:nth-child(1),
-          table.grades tbody tr td:nth-child(2) {
-            text-align: center;
-          }
-        </style>
-
-        <!-- TODO: Change or remove table -->
-        <!-- https://bulma.io/documentation/elements/table/ -->
-        <table class="table is-hoverable is-bordered grades">
-          <thead>
-            <tr>
-              <th>Letter</th>
-              <th>Done?</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>D</td>
-              <td><i class="has-text-success fas fa-check-circle"></i></td>
-              <td>Discussion of how this grade level was satisfied. Exactly how this section should look will depend on the assignment in question. There is no requirement for formatting in this way. This is just an example of what a table element might look like for this informaiton.</td>
-            </tr>
-
-            <tr>
-              <td>C</td>
-              <td><i class="has-text-success fas fa-check-circle"></i></td>
-              <td>Discussion of how this grade level was satisfied.</td>
-            </tr>
-
-            <tr>
-              <td>B</td>
-              <td><i class="has-text-warning far fa-check-circle"></i></td>
-              <td>Discussion of how this grade level was satisfied.</td>
-            </tr>
-
-            <tr>
-              <td>A</td>
-              <td><i class="has-text-danger fas fa-times-circle"></i></td>
-              <td>Discussion of how this grade level was not satisfied.</td>
-            </tr>
-          </tbody>
-
-        </table>
 
         <h2 id="about">About Us</h2>
 
         <!-- Profile box -->
         <!-- https://bulma.io/documentation/layout/media-object/ -->
         <article class="media">
-          <!-- TODO: Replace with profile photo -->
+
+
           <figure class="media-left">
             <p class="image is-128x128"><img class="is-rounded" src="profile.png"></p>
           </figure>
 
           <div class="media-content">
             <div class="content">
-              <!-- TODO: Replace with contact information -->
               <p>
+
                 <strong>Steven Rokkala</strong><br/>
                   CS Major, <a href="https://www.usfca.edu/">University of San Francisco</a><br/>
                     <em>Expected Graduation: Spring 2020</em><br/>
                     <i class="fas fa-envelope"></i> <a href="mailto:srokkala@dons.usfca.edu">srokkala@dons.usfca.edu</a>
-                    <!-- TODO: Replace with brief biography -->
                     <p>
                     Hello everyone, my name is Steven Rokkala and I love Java and Javascript because of how versatile they are. In my free time, I like to watch and play sports.
                     </p>
@@ -314,17 +181,18 @@ You can even put code into these pre blocks.
 
                 <strong> Alex Wang </strong><br/>
                   CS Major, <a href="https://www.usfca.edu/">University of San Francisco</a><br/>
-                    <em>Expected Graduation: 20??</em><br/>
-                    <i class="fas fa-envelope"></i> <a href="mailto:username@dons.usfca.edu">username@dons.usfca.edu</a>
-                    <!-- TODO: Replace with brief biography -->
+                    <em>Expected Graduation: December 2020</em><br/>
+                    <i class="fas fa-envelope"></i> <a href="mailto:username@dons.usfca.edu">zwang114@dons.usfca.edu</a>
                     <p>
-                      Here is a brief bio about yourself. A good rule of thumb is to include at least one technical tidbit (favorite area or course within computer science), and one fun tidbit (such as loving dogs).
+                      Interested in Data visualization, Brain-Computer Interaction, Game development, and more. Dedicated to using technology to bring more convenience, safety and peace to the world. A Slytherin.
                     </p>
                     <div class="heading">Skills</div>
                     <div class="tags">
                       <span class="tag">Python</span>
                       <span class="tag">C</span>
                       <span class="tag">Java</span>
+                      <span class="tag">ARM Assembly</span>
+                      <span class="tag">R</span>
                       <span class="tag">JavaScript</span>
                       <span class="tag">HTML</span>
                       <span class="tag">CSS</span>
@@ -333,13 +201,10 @@ You can even put code into these pre blocks.
 
                 <strong> Paul Ke </strong><br/>
                 CS Major, <a href="https://www.usfca.edu/">University of San Francisco</a><br/>
-                <em>Expected Graduation: 20??</em><br/>
-                <i class="fas fa-envelope"></i> <a href="mailto:username@dons.usfca.edu">username@dons.usfca.edu</a>
+                <em>Expected Graduation: May 2020</em><br/>
+                <i class="fas fa-envelope"></i> <a href="mailto:username@dons.usfca.edu">yke7@dons.usfca.edu</a>
               </p>
-              <!-- TODO: Replace with brief biography -->
-              <p>
-                Here is a brief bio about yourself. A good rule of thumb is to include at least one technical tidbit (favorite area or course within computer science), and one fun tidbit (such as loving dogs).
-              </p>
+              <p>To prepare for my career, I am pursuing my education degree from the University Of San Francisco and majoring in Computer Science and Marketing. I know theoretical applications and have individual ability to help develop new technology to solve many of the problems associated with the computer industry. For example, I have been completed a search engine project in using the Java program language.I also have an internship as a software engineer. During this internship, I learned how to use react framework and use JavaScript to solve web applcations problems.              </p>
               <div class="heading">Skills</div>
               <div class="tags">
                 <span class="tag">Python</span>
@@ -349,14 +214,14 @@ You can even put code into these pre blocks.
                 <span class="tag">HTML</span>
                 <span class="tag">CSS</span>
                 <span class="tag">SVG</span>
-
-              <!-- TODO: Replace or remove tags -->
-              <!-- https://bulma.io/documentation/elements/tag/ -->
-
               </div>
             </div>
           </div>
         </article>
+
+
+        <h2> Responsibilities </h2>
+
         <!-- End profile box -->
 
       </div>
