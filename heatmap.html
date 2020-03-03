@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Heatmap + pie chart: year, platform, publisher for game sales</title>
+
+    <!-- Load Bulma from CDN (consider saving it to repository instead) -->
+    <!-- https://bulma.io/ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+
+    <!-- Load Font Awesome 5 (free) icons -->
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+
+  <body>
+
+  <!-- Page header -->
+  <!-- https://bulma.io/documentation/layout/hero/ -->
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <!-- TODO: Change title -->
+        <h1 class="title">Game sales on mainstream home video game console from the year of 1985 to 2015</h1>
+        <!-- TODO: Change subtitle -->
+        <h2 class="subtitle">With distribution of publishers</h2>
+      </div>
+    </div>
+  </section>
+  <!-- End page header -->
+
+  <!-- Page navigation -->
+  <!-- https://bulma.io/documentation/components/navbar/ -->
+  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <!-- TODO: Change link to repository homepage if needed -->
+        <!-- TODO: Change which navbar-item is-active if needed -->
+        <a class="navbar-item is-active" href="index.html">
+          <span class="icon"><i class="fas fa-home"></i></span>
+          <span>Home</span>
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="main-menu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="main-menu" class="navbar-menu has-text-weight-medium">
+        <!-- Left navbar items -->
+        <div class="navbar-start">
+          <a class="navbar-item" href="#data" title="Data">
+            <span>Data</span>
+          </a>
+
+          <a class="navbar-item" href="#visualizations" title="Data">
+            <span>Visualizations</span>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- End page navigation -->
+
+  <section class="section">
+    <div class="container">
+      <!-- Begin page content -->
+      <div class="content">
+        <h1 class="title">
+          <!-- TODO: Change page title -->
+          Heatmap + pie chart
+        </h1>
+        <p class="subtitle">
+          <!-- TODO: Change page subtitle -->
+          platform + publisher of games over the year (between 1985 and 2015)
+        </p>
+
+        <p> </p>
+        <h2 id="data">Data</h2>
+
+        <ol>
+          <li><strong>Platform: </strong> Platform of the games release (i.e. PC,PS4, etc.)</li>
+
+          <li><strong>Publisher:</strong> Publisher of the game.</li>
+
+          <li><strong>Global_Sales:</strong> Total worldwide sales.</li>
+
+          <li><strong>Year:</strong> Year of the game's release.</li>
+        </ol>
+
+        <h3 id="wrangling">Wrangling</h3>
+
+        <p> All the data warngling for prototypes are in Tableau: </p>
+        <p> For the heatmap, the Year columns were filtered to only show the data of every 5 years since 1985; platform was filtered to only show famous home video game consoles.</p>
+
+        <h2 id="visualizations">Visualizations</h2>
+
+
+        <img src="vg-heatmap-overall.png" width="1920" height="1000">
+        <img src="vg-1985pc.png" width="1920" height="1000">
+        <img src="vg-1995pc.png" width="1920" height="1000">
+        <img src="vg-1995ps.png" width="1920" height="1000">
+        <img src="vg-2000pc.png" width="1920" height="1000">
+        <img src="vg-2000ps.png" width="1920" height="1000">
+        <img src="vg-2000ps2.png" width="1920" height="1000">
+        <img src="vg-2005pc.png" width="1920" height="1000">
+        <img src="vg-2005ps2.png" width="1920" height="1000">
+        <img src="vg-2005x360.png" width="1920" height="1000">
+        <img src="vg-2010pc.png" width="1920" height="1000">
+        <img src="vg-2010ps2.png" width="1920" height="1000">
+        <img src="vg-2010ps3.png" width="1920" height="1000">
+        <img src="vg-2010wii.png" width="1920" height="1000">
+        <img src="vg-2010x360.png" width="1920" height="1000">
+        <img src="vg-2015pc.png" width="1920" height="1000">
+        <img src="vg-2015ps3.png" width="1920" height="1000">
+        <img src="vg-2015ps4.png" width="1920" height="1000">
+        <img src="vg-2015wii.png" width="1920" height="1000">
+        <img src="vg-2015x360.png" width="1920" height="1000">
+        <img src="vg-2015xone.png" width="1920" height="1000">
+        <h4>Instructions</h4>
+
+        <p> The color of heatmap indicates the gaming selling amount of each platform in that year. The x-axis is the year(in step of every 5 years), and the y-axis is different mainstream home video game consoles. The pie charts, when clicking on each platform/year block in th heatmap, are distribution of publisher for games on that platform in that year.</p>
+
+        <h4>Discussion</h4>
+
+        <p> From the heatmap, the trend of home gaming consoles is obvious and showing how the market of gaming console shifts.
+        </p>
+
+        <p> From the pie charts, we can see that when a console is relatively new to the market, only a few publishers are producing games for that platform, and in 5 years, the publishers could increase largely. </p>
+
+        <p> Comprehensively, from the coloring in the heatmap and numbers of categories in pie chart, we can see the most way of playing games at home consoles: for example, at year of 2000, Sony's PlayStaion was dominating the market with large amount of sales and various of publishers of game on it. Soon as 2005, PlayStation2 took over and PlayStation is not in the map anymore;
+          also in the year of 2005 the x360 appears but only had 8 publishers for games on it. In the year of 2010, x360 was selling better and is really close to PlayStation3's sales, but wii was far more popular than PlayStation and x360... It is interesting to see how the gaming consoles come and go and how their companies present new products in the competition.</p>
+
+  <!-- Page footer -->
+  <!-- https://bulma.io/documentation/layout/footer/ -->
+  <footer class="footer">
+    <div class="content has-text-centered is-size-7">
+      <p>
+        <a href="#top">
+          <span class="fas fa-arrow-up"></span>
+          <span class="has-text-weight-medium">Back to Top</span>
+        </a>
+      </p>
+
+      <p>
+        <a href="https://github.com/usf-cs360-spring2020/template-bulma" class="button is-small" style="padding-left: 1em; padding-right: 1em;">
+          <i class="fab fa-github-alt"></i>&nbsp;<strong>Github</strong>
+        </a>
+
+        <a href="https://fontawesome.com/" class="button is-small" style="padding-left: 1em; padding-right: 1em;">
+          <i class="fab fa-font-awesome"></i>&nbsp;<strong>FontAwesome</strong>
+        </a>
+
+        <a href="https://bulma.io" class="button is-small">
+          <img src="https://bulma.io/images/made-with-bulma--semiblack.png" alt="Made with Bulma" width="128" height="24">
+        </a>
+      </p>
+    </div>
+  </footer>
+  <!-- End page footer -->
+
+  <!-- Mobile menu responsiveness -->
+  <!-- https://bulma.io/documentation/components/navbar/ -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    if ($navbarBurgers.length > 0) {
+      $navbarBurgers.forEach( el => {
+        el.addEventListener('click', () => {
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    }
+  });
+  </script>
+  <!-- End mobile menu responsiveness -->
+  </body>
+
+</html>
