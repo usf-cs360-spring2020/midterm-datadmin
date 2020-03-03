@@ -1,5 +1,7 @@
 # README
 
+To see the website: https://usf-cs360-spring2020.github.io/midterm-datadmin/
+
 <https://usf-cs360-spring2020.github.io/template-bulma/>
 
 ![Profile Image](profile.png)
