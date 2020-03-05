@@ -266,7 +266,7 @@
           <filter class='categorical' column='[federated.1gi3nij1vkhyek1bzotp21r7sag9].[Action (Call Type Group,MONTH(Response DtTm))]'>
             <groupfilter function='crossjoin' user:ui-action-filter='[Action1]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
               <groupfilter function='member' level='[Call Type Group]' member='&quot;Fire&quot;' />
-              <groupfilter function='member' level='[mn:Response DtTm:ok]' member='3' />
+              <groupfilter function='member' level='[mn:Response DtTm:ok]' member='6' />
             </groupfilter>
           </filter>
           <slices>
