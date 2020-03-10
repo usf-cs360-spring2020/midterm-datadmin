@@ -93,9 +93,104 @@
         <h3> protorype by Tableau </h3>
         <img src="Prototype3.png" width="1440" height="900">
 
+
+        <h3>D3 version</h3>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <div id="d3hm"></div>
+
+        <script>
+        // set svg size and plot margins
+        const width = 960;
+        const height = 500;
+
+        const margin = {
+          top: 50,
+          bottom: 35,
+          left: 60,
+          right: 15
+        };
+
+        // append the svg object to the body of the page
+        var svg = d3.select("#d3hm")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        var callTypeGroupName = ["Fire", "Potentially Life-Threatening", "Alarm", "Non Life-threatening", "Null"]
+//        let CTG = data.map(row => row['Call_Type_Group']);
+
+        let csv = "Fire_Department_Calls_for_Service05.csv";
+        let yMap = new Map();
+        let xMap = new Map();
+        let nbhdMap = new Map();
+        let currCount = 0;
+
+        d3.csv(csv).then(function (data){
+          var callTypeGroupArr = data.map(row => row['Call_Type_Group']);
+          var monthNumberNameArr = data.map(row => row['Response_DtTm']);
+          var neighborhoodsArr = data.map(row => row['Neighborhooods']);
+
+          var ResponseDate = data.map(row => row['Response_DtTm']);
+          i = 0;
+          while(i < data.length) {
+            typeName = callTypeGroupArr[i];
+            monthNum = monthNumberNameArr[i];
+            nbhd = neighborhoodsArr[i];
+
+            if(typeName == "") {
+              typeName = "NullType";
+            }
+            if(yMap.get(typeName)) {
+              currCount = yMap.get(typeName);
+        //        console.log(typeName + ": " + currCount + ";\n");
+
+              currCount = currCount + 1;
+              yMap.set(typeName, currCount);
+
+            } else{
+              yMap.set(typeName, 1);
+        //      console.log("newly add: " + typeName + "..." + i);
+            }
+            i++;
+    //        console.log(i);
+          }
+
+//          for(var i = 0; i++ < yMap.size; yMap.next())
+//    console.log(yMap.hash(yMap.key()) + ' : ' + yMap.value());
+// ["Fire", "Potentially Life-Threatening", "Alarm", "Non Life-threatening", "Null"]
+        console.log("look at key:" + yMap.get('Fire'));
+        console.log("look at key:" + yMap.get('Potentially Life-Threatening'));
+        console.log("look at key:" + yMap.get('Alarm'));
+        console.log("look at key:" + yMap.get('Non Life-threatening'));
+        console.log("look at key:" + yMap.get('NullType'));
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+        </script>
+<!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO-->
+
+
         <h4>Instructions</h4>
 
-        <p> The color of boxes in heatmap indicates the count of calling records, the x-axis of heatmap is the response date and time of SFFD's action, and y-axis is the call type. In the var chart, each bar is a neighborhood and length is the count of calls. </p>
+        <p> The color of boxes in heatmap indicates the count of calling records, the x-axis of heatmap is the response date and time of SFFD's action, and y-axis is the call type. In the bar chart, each bar is a neighborhood and length is the count of calls. </p>
 
         <h4>Discussion</h4>
         <p> Firstly, in the heatmap, we could see the comparison between months that how the fire calls distributed, that there is no huge difference of number of calls among months. Also from the y-axis we could see the comparison between different types of calls, such as "potentially life-threatening" has much more number of call than that of other types.
