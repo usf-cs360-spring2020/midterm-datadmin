@@ -109,13 +109,13 @@
           'plot': {}
         };
 
-        config.svg.height = 450;
-        config.svg.width = config.svg.height * 1.618; // golden ratio
+        config.svg.height = 500;
+        config.svg.width = 960; // golden ratio
 
         config.margin.top = 10;
         config.margin.right = 10;
         config.margin.bottom = 20;
-        config.margin.left = 80;
+        config.margin.left = 160;
 
         config.plot.x = config.margin.left;
         config.plot.y = config.margin.top;
@@ -123,9 +123,8 @@
         config.plot.height = config.svg.height - config.margin.top - config.margin.bottom;
 
 
-
         // setup svg
-        let svg = d3.select('body').select('svg');
+        let svg = d3.select('#d3hm').append('svg');
         svg.attr('width', config.svg.width);
         svg.attr('height', config.svg.height);
 
@@ -181,7 +180,7 @@
         monthColNames = ['January', 'Feburary', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
 
-        d3.csv(csv, recordRow).then(convertData).then(drawHeatmap);
+        d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap);
 
         function recordRow(row, index) {
           let callTypeGroup = row['Call_Type_Group'];
@@ -229,113 +228,98 @@
         console.log("look at key:" + ctgMap.get('Alarm'));
         console.log("look at key:" + ctgMap.get('Non Life-threatening'));
         console.log("look at key:" + ctgMap.get('NullType'));
-        let res = {};
-        res.values = [];
-        res.values.push({
-          'callTypeGroup': "Fire",
-          'January': ctgMap.get('Fire')[0],
-          'Feburary': ctgMap.get('Fire')[1],
-          'March': ctgMap.get('Fire')[2],
-          'April': ctgMap.get('Fire')[3],
-          'May': ctgMap.get('Fire')[4],
-          'June': ctgMap.get('Fire')[5],
-          'July': ctgMap.get('Fire')[6],
-          'August': ctgMap.get('Fire')[7],
-          'September': ctgMap.get('Fire')[8],
-          'October': ctgMap.get('Fire')[9],
-          'November': ctgMap.get('Fire')[10],
-          'December': ctgMap.get('Fire')[11]
-        });
-        res.values.push({
-          'callTypeGroup': "Potentially Life-Threatening",
-          'January': ctgMap.get('Potentially Life-Threatening')[0],
-          'Feburary': ctgMap.get('Potentially Life-Threatening')[1],
-          'March': ctgMap.get('Potentially Life-Threatening')[2],
-          'April': ctgMap.get('Potentially Life-Threatening')[3],
-          'May': ctgMap.get('Potentially Life-Threatening')[4],
-          'June': ctgMap.get('Potentially Life-Threatening')[5],
-          'July': ctgMap.get('Potentially Life-Threatening')[6],
-          'August': ctgMap.get('Potentially Life-Threatening')[7],
-          'September': ctgMap.get('Potentially Life-Threatening')[8],
-          'October': ctgMap.get('Potentially Life-Threatening')[9],
-          'November': ctgMap.get('Potentially Life-Threatening')[10],
-          'December': ctgMap.get('Potentially Life-Threatening')[11]
-        });
-        res.values.push({
-          'callTypeGroup': "Alarm",
-          'January': ctgMap.get('Alarm')[0],
-          'Feburary': ctgMap.get('Alarm')[1],
-          'March': ctgMap.get('Alarm')[2],
-          'April': ctgMap.get('Alarm')[3],
-          'May': ctgMap.get('Alarm')[4],
-          'June': ctgMap.get('Alarm')[5],
-          'July': ctgMap.get('Alarm')[6],
-          'August': ctgMap.get('Alarm')[7],
-          'September': ctgMap.get('Alarm')[8],
-          'October': ctgMap.get('Alarm')[9],
-          'November': ctgMap.get('Alarm')[10],
-          'December': ctgMap.get('Alarm')[11]
-        });
-        res.values.push({
-          'callTypeGroup': "Non Life-threatening",
-          'January': ctgMap.get('Non Life-threatening')[0],
-          'Feburary': ctgMap.get('Non Life-threatening')[1],
-          'March': ctgMap.get('Non Life-threatening')[2],
-          'April': ctgMap.get('Non Life-threatening')[3],
-          'May': ctgMap.get('Non Life-threatening')[4],
-          'June': ctgMap.get('Non Life-threatening')[5],
-          'July': ctgMap.get('Non Life-threatening')[6],
-          'August': ctgMap.get('Non Life-threatening')[7],
-          'September': ctgMap.get('Non Life-threatening')[8],
-          'October': ctgMap.get('Non Life-threatening')[9],
-          'November': ctgMap.get('Non Life-threatening')[10],
-          'December': ctgMap.get('Non Life-threatening')[11]
-        });
-        res.values.push({
-          'callTypeGroup': "NullType",
-          'January': ctgMap.get('NullType')[0],
-          'Feburary': ctgMap.get('NullType')[1],
-          'March': ctgMap.get('NullType')[2],
-          'April': ctgMap.get('NullType')[3],
-          'May': ctgMap.get('NullType')[4],
-          'June': ctgMap.get('NullType')[5],
-          'July': ctgMap.get('NullType')[6],
-          'August': ctgMap.get('NullType')[7],
-          'September': ctgMap.get('NullType')[8],
-          'October': ctgMap.get('NullType')[9],
-          'November': ctgMap.get('NullType')[10],
-          'December': ctgMap.get('NullType')[11]
-        });
-        res.values.push({
-          'ResMonth': "Januray",
-          'ResMonth': "Feburary",
-          'ResMonth': "March",
-          'ResMonth': "April",
-          'ResMonth': "May",
-          'ResMonth': "June",
-          'ResMonth': "July",
-          'ResMonth': "August",
-          'ResMonth': "September",
-          'ResMonth': "October",
-          'ResMonth': "November",
-          'ResMonth': "December"
-        });
+        let res = [];
+        let oneRow = {};
+        oneRow.values = [];
+
+        count = 0;
+        oneRow['callTypeGroup'] = "Fire";
+        while(count < 12) {
+          oneRow.values.push({
+            'month': monthColNames[count],
+            'value': ctgMap.get('Fire')[count]
+          });
+          count++;
+        }
+        res[0] = oneRow;
+
+
+
+        oneRow = {};
+        oneRow.values = [];
+        oneRow['callTypeGroup'] = "Potentially Life-Threatening";
+        count = 0;
+        while(count < 12) {
+          oneRow.values.push({
+            'month': monthColNames[count],
+            'value': ctgMap.get('Potentially Life-Threatening')[count]
+          });
+          count++;
+        }
+        res[1] = oneRow;
+
+
+
+
+        oneRow = {};
+        oneRow.values = [];
+        oneRow['callTypeGroup'] = "Alarm";
+        count = 0;
+        while(count < 12) {
+          oneRow.values.push({
+            'month': monthColNames[count],
+            'value': ctgMap.get('Alarm')[count]
+          });
+          count++;
+        }
+        res[2] = oneRow;
+
+
+
+        oneRow = {};
+        oneRow.values = [];
+        oneRow['callTypeGroup'] = "Non Life-threatening";
+        count = 0;
+        while(count < 12) {
+          oneRow.values.push({
+            'month': monthColNames[count],
+            'value': ctgMap.get('Non Life-threatening')[count]
+          });
+          count++;
+        }
+        res[3] = oneRow;
+
+
+
+        oneRow = {};
+        oneRow.values = [];
+        oneRow['callTypeGroup'] = "NullType";
+        count = 0;
+        while(count < 12) {
+          oneRow.values.push({
+            'month': monthColNames[count],
+            'value': ctgMap.get('NullType')[count]
+          });
+          count++;
+        }
+        res[4] = oneRow;
+
+        console.log(res);
 
         console.log("ending of func2");
         return res;
       }
 
 
-      function drawHeatmap(data) {
+      function drawAxis(data) {
         console.log("drawmap.");
         console.log(data);
-        console.log(data['values'][0]); //'Fire'
 
         let ctg = callTypeGroupName;
-        console.log(ctg);
+//        console.log(ctg);
 
         let dates = monthColNames;
-        console.log(dates);
+  //      console.log(dates);
 
         // now that we have data set the scale domain
         scale.x.domain(dates);
@@ -353,24 +337,59 @@
         gy.attr("class", "axis");
         gy.attr("transform", translate(config.plot.x, config.plot.y));
         gy.call(axis.y);
-    //    let callTypeGroups = data[values]['Fire'];
-  //      console.log(callTypeGroups);
 
-  //      let months = data['ResMonth'];
-  //      console.log(months);
+        return data;
+}
 
 
-        // now that we have data set the scale domain
-  //      scale.x.domain(months);
-  //      scale.y.domain(callTypeGroups);
 
 
- }
+      function drawHeatmap(data) {
 
-        // helper method to make translating easier
-        function translate(x, y) {
-          return 'translate(' + x + ',' + y + ')';
-        }
+        allValues = ctgMap.get('Fire').concat(ctgMap.get('Potentially Life-Threatening'),
+                ctgMap.get('Alarm'), ctgMap.get('Non Life-threatening'), ctgMap.get('NullType'))
+
+        // calculate the min, max, and median
+        let min = d3.min(allValues);
+        let max = d3.max(allValues);
+        let mid = d3.mean(allValues);
+
+        scale.color.domain([min, mid, max]);
+
+        // create one group per row
+        let rows = plot.selectAll("g.cell")
+          .data(data)
+          .enter()
+          .append("g");
+        rows.attr("class", "cell");
+
+        rows.attr("transform", function(d) {
+          return translate(0, scale.y(d["Call_Type_Group"]));
+        });
+
+
+          let cells = rows.selectAll("rect")
+            .data(d => d.values)
+            .enter()
+            .append("rect");
+
+              cells.attr("x", d => scale.x(d.month));
+              cells.attr("y", 0); // handled by group transform
+              cells.attr("width", scale.x.bandwidth());
+              cells.attr("height", scale.y.bandwidth());
+
+              // here is the color magic!
+              cells.style("fill", d => scale.color(d.value));
+              cells.style("stroke", d => scale.color(d.value));
+
+      }
+
+
+
+      // helper method to make translating easier
+      function translate(x, y) {
+        return 'translate(' + x + ',' + y + ')';
+      }
 
 
         </script>
