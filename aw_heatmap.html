@@ -329,13 +329,19 @@
         let gx = svg.append('g');
         gx.attr("id", "x-axis");
         gx.attr("class", "axis");
-        gx.attr("transform", translate(config.plot.x, config.plot.y + config.plot.height));
+        plotX = config.plot.x;
+        plotYH = config.plot.y + config.plot.height;
+
+        gx.attr('transform', translate(plotX, plotYH));
         gx.call(axis.x);
 
         let gy = svg.append('g');
         gy.attr("id", "y-axis");
         gy.attr("class", "axis");
-        gy.attr("transform", translate(config.plot.x, config.plot.y));
+
+        plotY = config.plot.y;
+
+        gy.attr('transform', translate(config.plot.x, config.plot.y));
         gy.call(axis.y);
 
         return data;
@@ -363,24 +369,26 @@
           .append("g");
         rows.attr("class", "cell");
 
+
         rows.attr("transform", function(d) {
-          return translate(0, scale.y(d["Call_Type_Group"]));
+          console.log(d);
+          return translate(0, scale.y(d['callTypeGroup']));
         });
 
 
-          let cells = rows.selectAll("rect")
-            .data(d => d.values)
-            .enter()
-            .append("rect");
+        let cells = rows.selectAll("rect")
+          .data(d => d.values)
+          .enter()
+          .append("rect");
 
-              cells.attr("x", d => scale.x(d.month));
-              cells.attr("y", 0); // handled by group transform
-              cells.attr("width", scale.x.bandwidth());
-              cells.attr("height", scale.y.bandwidth());
+        cells.attr("x", d => scale.x(d.month));
+        cells.attr("y", 0); // handled by group transform
+        cells.attr("width", scale.x.bandwidth());
+        cells.attr("height", scale.y.bandwidth());
 
-              // here is the color magic!
-              cells.style("fill", d => scale.color(d.value));
-              cells.style("stroke", d => scale.color(d.value));
+        // here is the color magic!
+        cells.style("fill", d => scale.color(d.value));
+        cells.style("stroke", d => scale.color(d.value));
 
       }
 
@@ -388,6 +396,7 @@
 
       // helper method to make translating easier
       function translate(x, y) {
+        console.log('translate(' + x + ',' + y + ')');
         return 'translate(' + x + ',' + y + ')';
       }
 
