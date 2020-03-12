@@ -33,17 +33,6 @@ var x1 = d3.scaleBand();
 var y   = d3.scaleLinear().rangeRound([config.svg.height, 0]);
 d3.csv(csv).then(drawChart);
 
-function convert(input) {
-  let output = {};
-
-  output.PotentiallyLifeThreatening = +input['Potentially Life-Threatening'];
-  output.NonLifeThreatening = +input['Non Life-threatening'];
-  output.Alarm = +input['Alarm'];
-  output.Fire = +input['Fire'];
-
-  console.log("Convert: "+output)
-  return output;
-}
 
 function isNeighbor(Counting, name){
   return Counting.keys === name;
@@ -59,7 +48,13 @@ function Frequency(data){
   console.log("length: "+data.length);
   for(var i = 0; i < data.length; i++){
     neighbor = data[i].Neighborhooods;
-    type = data[i].CallTypeGroup;
+    // type = data[i].CallTypeGroup;
+    if(data[i].CallTypeGroup !== ''){
+      type = data[i].CallTypeGroup;
+    }
+    else{
+      continue;
+    }
     if(Counting.some(Counting => Counting.keys === neighbor) == false){
       numbers = new Object();
       numbers.keys = neighbor;
@@ -166,13 +161,13 @@ function drawChart(data){
             .style("opacity","0");
 
         legend.append("rect")
-            .attr("x", config.svg.width - 18)
+            .attr("x", config.svg.width*0.5)
             .attr("width", 18)
             .attr("height", 18)
             .style("fill", function(d) { return color(d); });
 
         legend.append("text")
-            .attr("x", config.svg.width - 24)
+            .attr("x", config.svg.width*0.5-6)
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
