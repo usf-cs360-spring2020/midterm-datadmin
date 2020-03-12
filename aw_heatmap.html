@@ -399,23 +399,6 @@
       }
 
 
-  const bubbles = group.selectAll('circle')
-    .data(data)
-    .enter()
-    .append('circle');
-
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
-  bubbles.attr('cx', d => scales.x(d.income));
-  bubbles.attr('cy', d => scales.y(d.mobility));
-  bubbles.attr('r',  d => scales.r(d.count));
-
-  bubbles.style('stroke', 'white');
-  bubbles.style('fill', d => scales.fill(d.trend));
-}
-
-
-
-
 //TODO
 // https://beta.observablehq.com/@tmcw/d3-scalesequential-continuous-color-legend-example
 function drawColorLegend() {
@@ -483,7 +466,7 @@ function drawColorLegend() {
   // in this case there really is no need for the percent and legend scales
   //TODO
 
-
+}
       // helper method to make translating easier
       function translate(x, y) {
         console.log('translate(' + x + ',' + y + ')');
