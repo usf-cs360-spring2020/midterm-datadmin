@@ -22,7 +22,7 @@
     <div class="hero-body">
       <div class="container">
 
-        <h1 class="title">Data Admin's Project Home Page</h1>
+        <h1 class="title">Data Admin's Project Home Page: SFFD</h1>
         <h2 class="subtitle">By Steven, Paul, and Alex</h2>
       </div>
     </div>
@@ -64,7 +64,7 @@
                 <span class="icon"><i class="fas fa-chart-line"></i></span>
                 <span>Scatterplot matrix Chart</span>
               </a>
-              <a class="navbar-item" href = "heatmap.html">
+              <a class="navbar-item" href = "aw_heatmap.html">
                 <span class="icon"><i class="fas fa-chart-bar"></i></span>
                 <span>Heatmap</span>
               </a>
@@ -78,16 +78,7 @@
 
         <!-- Right navbar items -->
         <div class="navbar-end">
-          <!-- TODO: Update as needed -->
-          <a class="navbar-item" href="#about" title="About">
-            <span class="icon"><i class="fas fa-tasks"></i></span>
-            <span>Grade</span>
-          </a>
 
-          <a class="navbar-item" href="#about" title="About">
-            <span class="icon"><i class="fas fa-info-circle"></i></span>
-            <span>About</span>
-          </a>
         </div>
       </div>
     </div>
@@ -103,7 +94,10 @@
         </h1>
 
         <h2 id="data">Introduction - overall narrative</h2>
-        <p>Our story is to know more about the work of superheroes in our real life - SFFD. In general, we might have some impression of what firefighters do everyday, but what about some facts and details? What kinds of work do they do everyday to help people? When is the busiest season for their work? In range of San Francisco, how are the incidents distributed in neighborhoods? Which unit do SFFD dispatch to the scene? We are going to figure out in this page</p>
+        <p>Our theme is to know more about the work of superheroes in our real life - SFFD. </p>
+        <p>In general, we might have some impression of what firefighters do, but what about some facts and details that we don't really know? </p>
+        <p>What different kinds of work do they do everyday to help people? When is the busiest season for their work? In range of San Francisco, how are the incidents distributed in neighborhoods? Which unit do SFFD dispatch to the scene? </p>
+        <p>These intriguing questions are awaiting, and we are going to figure out in our data visualizations.</p>
 
         <h2 id="data">Dataset</h2>
         <p> The dataset contains bunch of record is related to fire Calls-For-Service includes all fire units responses to calls. Each record includes the call number, incident number, address, unit identifier, call type, and disposition. </p>
@@ -122,13 +116,32 @@
 
         <!-- <h3>Shared processing or filtering: </h3>
           <p>Possible ways of grouping: by sales in different regions(global, North America, Europe, Japan and other regions), or by published years, or by gaming platform, or by publishers. All the filtering could be done in main-stream data handling softwares.</p> -->
+          <h3 id="wrangling">Wrangling</h3>
+
+          <p> All the data warngling for prototypes are in the website user interface: within range of 2019, and only the columns needed for prototypes are kept as groups.</p>
+
 
           <h2> Navigation </h2>
           <p> The top memu has home button and a navbar with list of button which each could navigate to different chart to demostrate our idea and thought</p>
 
           <h2 id = "line"> Scatterplotmatrix Prototype</h2>
-          <h4>Steven Rokkala</h4>
+          <h4>Steven  Rokkala</h4>
            <img  src="Prototype1.png" />
+
+           <h3> Data Wrangling</h3>
+           <p>
+             To cut the huge dataset down I deleted the others and null columns due to irrelevant data.
+             Since this graph analyzes cases in 2019, I only used data from the year 2019. I have also decided to only compare between life threatening
+             and non life threatening cases since the number of other cases were so few.
+           </p>
+
+              <h3> Planned Interactivity</h3>
+              <p>
+                I plan on being able to create a similar chart with features such as
+                tooltips with additional information to be displayed
+                when the user hovers over a certain data point. When this action occurs, the other data points
+                will be slightly faded. More features will be implemented based on feedback.
+              </p>
 
         <h2 id = "line"> Bar + Pie chart Graph Prototype</h2>
          <h4>Paul Ke </h4>
@@ -220,8 +233,7 @@
 
 
         <h2> Responsibilities </h2>
-        All the plans and works would be discussed within the team and assign small actions to each of the team member after a meeting.
-        Currently the works among the team members needs further decision. </p>
+        <p> Each of teammates built a prototype, Steven proofreaded the dataset issue, Paul reorganized each teammate's own web page for structure of the group's website, Alex did dataset analysing and theme choosing.</p>
 
         <!-- End profile box -->
 

@@ -156,4 +156,31 @@ function drawChart(data){
             .attr("y", function(d) { return y(d.Frequency); })
             .attr("height", function(d) { return config.svg.height - y(d.Frequency); });
 
+
+
+      var legend = svg.selectAll(".legend")
+            .data(groupData[0].values.map(function(d) { return d.CallTypeName; }).reverse())
+        .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; })
+            .style("opacity","0");
+
+        legend.append("rect")
+            .attr("x", config.svg.width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", function(d) { return color(d); });
+
+        legend.append("text")
+            .attr("x", config.svg.width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) {return d; });
+
+        legend.transition().duration(500).delay(function(d,i){ return 1300 + 100 * i; }).style("opacity","1");
+
+
+
+
 }
