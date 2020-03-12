@@ -355,12 +355,19 @@
         allValues = ctgMap.get('Fire').concat(ctgMap.get('Potentially Life-Threatening'),
                 ctgMap.get('Alarm'), ctgMap.get('Non Life-threatening'), ctgMap.get('NullType'))
 
-        // calculate the min, max, and median
-        let min = d3.min(allValues);
-        let max = d3.max(allValues);
-        let mid = d3.mean(allValues);
+        let min = d3.quantile(allValues, 0);
+        let q1 = d3.quantile(allValues, 0.25);
+        let median = d3.quantile(allValues, 0.5);
+        let q3 = d3.quantile(allValues, 0.75);
+        let max = d3.quantile(allValues, 1);
 
-        scale.color.domain([min, mid, max]);
+
+        // calculate the min, max, and median
+    //    let min = d3.min(allValues);
+    //    let max = d3.max(allValues);
+    //    let mid = d3.median(allValues);
+        console.log("q1: " + q1);
+        scale.color.domain([min, q1, median, q3, max]);
 
         // create one group per row
         let rows = plot.selectAll("g.cell")
@@ -368,8 +375,6 @@
           .enter()
           .append("g");
         rows.attr("class", "cell");
-
-
         rows.attr("transform", function(d) {
           console.log(d);
           return translate(0, scale.y(d['callTypeGroup']));
@@ -388,10 +393,95 @@
 
         // here is the color magic!
         cells.style("fill", d => scale.color(d.value));
+        console.log(data);
         cells.style("stroke", d => scale.color(d.value));
 
       }
 
+
+  const bubbles = group.selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle');
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+  bubbles.attr('cx', d => scales.x(d.income));
+  bubbles.attr('cy', d => scales.y(d.mobility));
+  bubbles.attr('r',  d => scales.r(d.count));
+
+  bubbles.style('stroke', 'white');
+  bubbles.style('fill', d => scales.fill(d.trend));
+}
+
+
+
+
+//TODO
+// https://beta.observablehq.com/@tmcw/d3-scalesequential-continuous-color-legend-example
+function drawColorLegend() {
+  const legendWidth = 200;
+  const legendHeight = 20;
+
+  // place legend in its own group
+  const group = svg.append('g').attr('id', 'color-legend');
+
+  // shift legend to appropriate position
+  group.attr('transform', translate(width - margin.right - legendWidth, margin.top));
+
+  const title = group.append('text')
+    .attr('class', 'axis-title')
+    .text('Trend of Parents in Bottom 20%');
+
+  title.attr('dy', 12);
+
+  // lets draw the rectangle, but it won't have a fill just yet
+  const colorbox = group.append('rect')
+    .attr('x', 0)
+    .attr('y', 12 + 6)
+    .attr('width', legendWidth)
+    .attr('height', legendHeight);
+
+  // we need to create a linear gradient for our color legend
+  // this defines a color at a percent offset
+  // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/linearGradient
+
+  // this is easier if we create a scale to map our colors to percents
+
+  // get the domain first (we do not want the middle value from the diverging scale)
+  const colorDomain = [d3.min(scales.fill.domain()), d3.max(scales.fill.domain())];
+
+  // add a new scale to go from color tick to percent
+  scales.percent = d3.scaleLinear()
+    .range([0, 100])
+    .domain(colorDomain);
+
+  // we have to first add gradients
+  const defs = svg.append('defs');
+
+  // add a color stop per data tick
+  // input  (ticks)   : [-20, ..., 15, ..., 50]
+  // output (percents): [  0, ..., 50, ..., 100]
+  defs.append('linearGradient')
+    .attr('id', 'gradient')
+    .selectAll('stop')
+    .data(scales.fill.ticks())
+    .enter()
+    .append('stop')
+    .attr('offset', d => scales.percent(d) + '%')
+    .attr('stop-color', d => scales.fill(d));
+
+  // draw the color rectangle with the gradient
+  colorbox.attr('fill', 'url(#gradient)');
+
+  // now we need to draw tick marks for our scale
+  // we can create a legend that will map our data domain to the legend colorbox
+  scales.legend = d3.scaleLinear()
+    .domain(colorDomain)
+    .range([0, legendWidth]);
+
+  // i tend to keep scales global so i can debug them in the console
+  // in this case there really is no need for the percent and legend scales
+  //TODO
 
 
       // helper method to make translating easier
