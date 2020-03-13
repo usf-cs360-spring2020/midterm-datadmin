@@ -100,7 +100,7 @@
 
         <script>
 
-        let csv = "Fire_Department_Calls_for_Service05.csv";
+        let csv = "FDCS0312.csv";
 
         // configuration of svg/plot area
         let config = {
@@ -162,16 +162,10 @@
         axis.y = d3.axisLeft(scale.y);
         axis.y.tickPadding(0);
 
-
-        // format the tick labels
-  //      axis.x.tickFormat(dateFormatter);
-  //      axis.y.tickFormat(regionFormatter);
-
         var callTypeGroupName = ["Fire", "Potentially Life-Threatening", "Alarm", "Non Life-threatening", "NullType"]
-//        let CTG = data.map(row => row['Call_Type_Group']);
 
-        let ctgMap = new Map(); //call type group map
-        let nbhMap = new Map(); //beighborhood map
+        let ctgMap = {}; //call type group map
+        let nbhMap = {}; //beighborhood map
 
         let currCount = 0;
         let parseDateName = d3.timeParse('%m/%d/%Y');
@@ -183,51 +177,76 @@
         d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap);
 
         function recordRow(row, index) {
-          let callTypeGroup = row['Call_Type_Group'];
-          let monthNumberName= row['Response_DtTm'];
-          let neighborhoods = row['Neighborhooods'];
-          let ResponseDate = row['Response_DtTm'];
+          let callTypeGroup = row['CallTypeGroup'];
+          let monthNumberName= row['ResponseDtTm'];
+          let neighborhoods = row['Neighborhoods'];
 
-            var typeName = callTypeGroup;
-          //      console.log("ctg: " + typeName);
-            var dateNum = monthNumberName;
-          //        console.log("month: " + dateNum);
-            var monthNum = formatDateNumber(parseDateName(dateNum));
-            var monthName = formatDateName(parseDateName(dateNum));
-          //      console.log("\t ==> " + monthName + " = " + monthNum);
-            var nbhd = neighborhoods;
-          //      console.log("neighborhood: " + nbhd);
+          var typeName = callTypeGroup;
 
-            if(typeName == "") {
+          var dateNum = monthNumberName;
+      //    console.log("month: " + dateNum);
+          var monthNum = formatDateNumber(parseDateName(dateNum));
+          var monthName = formatDateName(parseDateName(dateNum));
+        //  console.log("\t ==> " + monthName + " = " + monthNum);
+          var nbhd = neighborhoods;
+    //      console.log("neighborhood: " + nbhd);
+
+          if(typeName == "") {
               typeName = "NullType";
-            }
-
-            var monthArrIndex = parseInt(monthNum, 10) - 1;
+          }
+    //      console.log("ctg: " + typeName);
+          var monthArrIndex = parseInt(monthNum, 10) - 1;
           //        console.log("month index: " + monthArrIndex);
 
-            if(ctgMap.get(typeName)) {
-              monthList = ctgMap.get(typeName);
-          //      console.log(typeName + ": " + monthList + ";\n");
+          if(ctgMap[typeName]) {
+              monthList = ctgMap[typeName];
+      //        console.log("has type --- " + typeName + ": " + monthList + ";\n");
               origCount = monthList[monthArrIndex];
               monthList[monthArrIndex] = origCount + 1;
 
-            } else{
-              monthList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-              monthList[monthArrIndex] = 1;
+          } else{
+              monthList = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+              monthList[monthArrIndex] = 1.0;
+          }
+          ctgMap[typeName] = monthList;
 
-            }
-            ctgMap.set(typeName, monthList);
-
-
-            return ctgMap;
+          return ctgMap;
       }
 
+
+      function getDailyAverage(map, key) {
+
+        m = 0;
+        while (m < 12) {
+          if(m == 1) { // Feburary
+            ctgMap[key][m] = (ctgMap[key][m] / 28).toFixed(1);
+          } else if (m == 3 || m == 5 || m == 8 || m == 10) { //April, June, September, November
+            ctgMap[key][m] = (ctgMap[key][m] / 30).toFixed(1);
+          } else {
+            ctgMap[key][m] = (ctgMap[key][m] / 31).toFixed(1);;
+          }
+          m++;
+        }
+
+
+        return map;
+      }
+
+
+
       function convertData(map) {
-        console.log("look at key:" + ctgMap.get('Fire'));
-        console.log("look at key:" + ctgMap.get('Potentially Life-Threatening'));
-        console.log("look at key:" + ctgMap.get('Alarm'));
-        console.log("look at key:" + ctgMap.get('Non Life-threatening'));
-        console.log("look at key:" + ctgMap.get('NullType'));
+
+        getDailyAverage(map, 'Fire');
+        getDailyAverage(map, 'Potentially Life-Threatening');
+        getDailyAverage(map, 'Alarm');
+        getDailyAverage(map, 'Non Life-threatening');
+        getDailyAverage(map, 'NullType');
+        console.log("...");
+        console.log("look at key:" + ctgMap['Fire']);
+        console.log("look at key:" + ctgMap['Potentially Life-Threatening']);
+        console.log("look at key:" + ctgMap['Alarm']);
+        console.log("look at key:" + ctgMap['Non Life-threatening']);
+        console.log("look at key:" + ctgMap['NullType']);
         let res = [];
         let oneRow = {};
         oneRow.values = [];
@@ -237,7 +256,7 @@
         while(count < 12) {
           oneRow.values.push({
             'month': monthColNames[count],
-            'value': ctgMap.get('Fire')[count]
+            'value': ctgMap['Fire'][count]
           });
           count++;
         }
@@ -252,7 +271,7 @@
         while(count < 12) {
           oneRow.values.push({
             'month': monthColNames[count],
-            'value': ctgMap.get('Potentially Life-Threatening')[count]
+            'value': ctgMap['Potentially Life-Threatening'][count]
           });
           count++;
         }
@@ -268,7 +287,7 @@
         while(count < 12) {
           oneRow.values.push({
             'month': monthColNames[count],
-            'value': ctgMap.get('Alarm')[count]
+            'value': ctgMap['Alarm'][count]
           });
           count++;
         }
@@ -283,7 +302,7 @@
         while(count < 12) {
           oneRow.values.push({
             'month': monthColNames[count],
-            'value': ctgMap.get('Non Life-threatening')[count]
+            'value': ctgMap['Non Life-threatening'][count]
           });
           count++;
         }
@@ -298,7 +317,7 @@
         while(count < 12) {
           oneRow.values.push({
             'month': monthColNames[count],
-            'value': ctgMap.get('NullType')[count]
+            'value': ctgMap['NullType'][count]
           });
           count++;
         }
@@ -352,8 +371,8 @@
 
       function drawHeatmap(data) {
 
-        allValues = ctgMap.get('Fire').concat(ctgMap.get('Potentially Life-Threatening'),
-                ctgMap.get('Alarm'), ctgMap.get('Non Life-threatening'), ctgMap.get('NullType'))
+        allValues = ctgMap['Fire'].concat(ctgMap['Potentially Life-Threatening'],
+                ctgMap['Alarm'], ctgMap['Non Life-threatening'], ctgMap['NullType'])
 
         let min = d3.quantile(allValues, 0);
         let q1 = d3.quantile(allValues, 0.25);
@@ -361,12 +380,6 @@
         let q3 = d3.quantile(allValues, 0.75);
         let max = d3.quantile(allValues, 1);
 
-
-        // calculate the min, max, and median
-    //    let min = d3.min(allValues);
-    //    let max = d3.max(allValues);
-    //    let mid = d3.median(allValues);
-        console.log("q1: " + q1);
         scale.color.domain([min, q1, median, q3, max]);
 
         // create one group per row
@@ -496,7 +509,6 @@ function drawColorLegend() {
         <img src="hm200.png" width="1440" height="900">
         <img src="hm300.png" width="1440" height="900">
         <img src="hm500.png" width="1440" height="900">
-        <img src="hm600.png" width="1440" height="900">
 
 
         <h3> Connection to the project theme</h3>
