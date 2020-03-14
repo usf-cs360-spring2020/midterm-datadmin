@@ -84,15 +84,14 @@
 
           <li><strong>Neighborhooods - Analysis Boundaries:</strong> Neighborhood District associated with this address, boundaries available here: https://data.sfgov.org/d/p5b7-5n3h</li>
 
-          <li><strong>Number of Records: </strong> Count of records.</li>
+          <li><strong>Number of Incidents: </strong> Count of incidents.</li>
         </ol>
 
 
         <h2 id="visualizations">Visualizations</h2>
 
-        <h3> protorype by Tableau </h3>
+        <h3> Prototype by Tableau </h3>
         <img src="Prototype3.png" width="1440" height="900">
-
 
         <h3>D3 version</h3>
         <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -109,18 +108,18 @@
           'plot': {}
         };
 
-        config.svg.height = 500;
-        config.svg.width = 960; // golden ratio
+        config.svg.height = 360;
+        config.svg.width = 1200; // golden ratio
 
         config.margin.top = 10;
         config.margin.right = 10;
-        config.margin.bottom = 20;
+        config.margin.bottom = 30;
         config.margin.left = 160;
 
         config.plot.x = config.margin.left;
-        config.plot.y = config.margin.top;
+        config.plot.y = config.margin.top + 80;
         config.plot.width = config.svg.width - config.margin.left - config.margin.right;
-        config.plot.height = config.svg.height - config.margin.top - config.margin.bottom;
+        config.plot.height = config.svg.height - config.margin.top - config.margin.bottom - 160;
 
 
         // setup svg
@@ -175,6 +174,9 @@
             'July', 'August', 'September', 'October', 'November', 'December'];
 
         d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap);
+        drawColorLegend();
+
+
 
         function recordRow(row, index) {
           let callTypeGroup = row['CallTypeGroup'];
@@ -227,8 +229,6 @@
           }
           m++;
         }
-
-
         return map;
       }
 
@@ -241,7 +241,7 @@
         getDailyAverage(map, 'Alarm');
         getDailyAverage(map, 'Non Life-threatening');
         getDailyAverage(map, 'NullType');
-        console.log("...");
+
         console.log("look at key:" + ctgMap['Fire']);
         console.log("look at key:" + ctgMap['Potentially Life-Threatening']);
         console.log("look at key:" + ctgMap['Alarm']);
@@ -262,8 +262,6 @@
         }
         res[0] = oneRow;
 
-
-
         oneRow = {};
         oneRow.values = [];
         oneRow['callTypeGroup'] = "Potentially Life-Threatening";
@@ -276,8 +274,6 @@
           count++;
         }
         res[1] = oneRow;
-
-
 
 
         oneRow = {};
@@ -293,8 +289,6 @@
         }
         res[2] = oneRow;
 
-
-
         oneRow = {};
         oneRow.values = [];
         oneRow['callTypeGroup'] = "Non Life-threatening";
@@ -307,8 +301,6 @@
           count++;
         }
         res[3] = oneRow;
-
-
 
         oneRow = {};
         oneRow.values = [];
@@ -364,9 +356,7 @@
         gy.call(axis.y);
 
         return data;
-}
-
-
+      }
 
 
       function drawHeatmap(data) {
@@ -389,7 +379,7 @@
           .append("g");
         rows.attr("class", "cell");
         rows.attr("transform", function(d) {
-          console.log(d);
+
           return translate(0, scale.y(d['callTypeGroup']));
         });
 
@@ -406,83 +396,78 @@
 
         // here is the color magic!
         cells.style("fill", d => scale.color(d.value));
-        console.log(data);
+
         cells.style("stroke", d => scale.color(d.value));
 
       }
 
 
-//TODO
-// https://beta.observablehq.com/@tmcw/d3-scalesequential-continuous-color-legend-example
-/*
-function drawColorLegend() {
-  const legendWidth = 200;
-  const legendHeight = 20;
+      function drawColorLegend() {
+        const legendWidth = 200;
+        const legendHeight = 20;
 
-  // place legend in its own group
-  const group = svg.append('g').attr('id', 'color-legend');
+        // place legend in its own group
+        const group = svg.append("g");
+        group.attr('id', 'color-legend');
 
-  // shift legend to appropriate position
-  group.attr('transform', translate(width - margin.right - legendWidth, margin.top));
+        console.log("legend position: " + (config.svg.width - config.margin.right));
+        // shift legend to appropriate position
+        group.attr('transform', translate(config.svg.width - config.margin.right - legendWidth - 30, config.margin.top - 10));
 
-  const title = group.append('text')
-    .attr('class', 'axis-title')
-    .text('Trend of Parents in Bottom 20%');
+        const title = group.append('text')
+          .attr('class', 'axis-title')
+          .text('Average Daily Count of Incidents');
+          title.attr('dx', -39);
+          title.attr('dy', 12);
 
-  title.attr('dy', 12);
+        const legendLabelMin = group.append('text')
+          .text('0.2')
+          .attr('dx', -45)
+          .attr('dy', 35);
 
-  // lets draw the rectangle, but it won't have a fill just yet
-  const colorbox = group.append('rect')
-    .attr('x', 0)
-    .attr('y', 12 + 6)
-    .attr('width', legendWidth)
-    .attr('height', legendHeight);
+        const legendLabelMax = group.append('text')
+          .text('200.3')
+          .attr('dx', 185)
+          .attr('dy', 35);
 
-  // we need to create a linear gradient for our color legend
-  // this defines a color at a percent offset
-  // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/linearGradient
+        // lets draw the rectangle, but it won't have a fill just yet
+        const colorbox = group.append('rect')
+          .attr('x', -17)
+          .attr('y', 12 + 6)
+          .attr('width', legendWidth)
+          .attr('height', legendHeight);
 
-  // this is easier if we create a scale to map our colors to percents
+        // get the domain first (we do not want the middle value from the diverging scale)
+        const colorDomain = [d3.min(scale.color.domain()), d3.max(scale.color.domain())];
 
-  // get the domain first (we do not want the middle value from the diverging scale)
-  const colorDomain = [d3.min(scales.fill.domain()), d3.max(scales.fill.domain())];
+        // add a new scale to go from color tick to percent
+        scale.percent = d3.scaleLinear()
+          .range([0, 100])
+          .domain(colorDomain);
 
-  // add a new scale to go from color tick to percent
-  scales.percent = d3.scaleLinear()
-    .range([0, 100])
-    .domain(colorDomain);
+        // we have to first add gradients
+        const defs = svg.append('defs');
 
-  // we have to first add gradients
-  const defs = svg.append('defs');
+        console.log(scale.color.ticks());
+        // add a color stop per data tick
+        // input  (ticks)   : [0.2, ..., 100, ..., 200.3]
+        // output (percents): [  0, ..., 50, ..., 100]
+        defs.append('linearGradient')
+          .attr('id', 'gradient')
+          .selectAll('stop')
+          .data(scale.color.ticks())
+          .enter()
+          .append('stop')
+          .attr('offset', d => scale.percent(d) + '%')
+          .attr('stop-color', d => scale.color(d));
 
-  // add a color stop per data tick
-  // input  (ticks)   : [-20, ..., 15, ..., 50]
-  // output (percents): [  0, ..., 50, ..., 100]
-  defs.append('linearGradient')
-    .attr('id', 'gradient')
-    .selectAll('stop')
-    .data(scales.fill.ticks())
-    .enter()
-    .append('stop')
-    .attr('offset', d => scales.percent(d) + '%')
-    .attr('stop-color', d => scales.fill(d));
+        // draw the color rectangle with the gradient
+        colorbox.attr('fill', 'url(#gradient)');
 
-  // draw the color rectangle with the gradient
-  colorbox.attr('fill', 'url(#gradient)');
 
-  // now we need to draw tick marks for our scale
-  // we can create a legend that will map our data domain to the legend colorbox
-  scales.legend = d3.scaleLinear()
-    .domain(colorDomain)
-    .range([0, legendWidth]);
+      }
 
-  // i tend to keep scales global so i can debug them in the console
-  // in this case there really is no need for the percent and legend scales
-  //TODO
 
-}
-
-*/
       // helper method to make translating easier
       function translate(x, y) {
         console.log('translate(' + x + ',' + y + ')');
@@ -496,7 +481,7 @@ function drawColorLegend() {
 
         <h4>Instructions</h4>
 
-        <p> The color of boxes in heatmap indicates the count of calling records, the x-axis of heatmap is the response date and time of SFFD's action, and y-axis is the call type. In the bar chart, each bar is a neighborhood and length is the count of calls. </p>
+        <p> The color of boxes in heatmap indicates the count of unique incidents, the x-axis of heatmap is the response date and time of SFFD's action, and y-axis is the call type. In the bar chart, each bar is a neighborhood and length is the count of calls. </p>
 
         <h4>Discussion</h4>
         <p> Firstly, in the heatmap, we could see the comparison between months that how the fire calls distributed, that there is no huge difference of number of calls among months. Also from the y-axis we could see the comparison between different types of calls, such as "potentially life-threatening" has much more number of call than that of other types.
