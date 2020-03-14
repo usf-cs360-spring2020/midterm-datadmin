@@ -181,17 +181,17 @@
         function recordRow(row, index) {
           let callTypeGroup = row['CallTypeGroup'];
           let monthNumberName= row['ResponseDtTm'];
-          let neighborhoods = row['Neighborhoods'];
+          let neighborhood = row['Neighborhoods'];
 
           var typeName = callTypeGroup;
-
+          var nbhd = neighborhood;
           var dateNum = monthNumberName;
       //    console.log("month: " + dateNum);
           var monthNum = formatDateNumber(parseDateName(dateNum));
           var monthName = formatDateName(parseDateName(dateNum));
         //  console.log("\t ==> " + monthName + " = " + monthNum);
-          var nbhd = neighborhoods;
-    //      console.log("neighborhood: " + nbhd);
+
+
 
           if(typeName == "") {
               typeName = "NullType";
@@ -211,6 +211,12 @@
               monthList[monthArrIndex] = 1.0;
           }
           ctgMap[typeName] = monthList;
+
+
+          nbhMap[neighborhood] = nbhd;
+
+
+          console.log(nbhMap);
 
           return ctgMap;
       }
@@ -234,8 +240,8 @@
 
 
 
-      function convertData(map) {
-
+      function convertData(map, nbhMap) {
+        console.log(nbhMap);
         getDailyAverage(map, 'Fire');
         getDailyAverage(map, 'Potentially Life-Threatening');
         getDailyAverage(map, 'Alarm');
@@ -250,6 +256,10 @@
         let res = [];
         let oneRow = {};
         oneRow.values = [];
+
+        console.log(nbhMap);
+//        nbhd =  nbhMap[neighborhood];
+//        oneRow[nbhd] = nbhd;
 
         count = 0;
         oneRow['callTypeGroup'] = "Fire";
@@ -396,8 +406,31 @@
 
         // here is the color magic!
         cells.style("fill", d => scale.color(d.value));
-
         cells.style("stroke", d => scale.color(d.value));
+
+
+        chosen = false;
+        cells.on("click", function(d) {
+
+          if(chosen == false) {
+            console.log("click: " + d.month + ", " + d.value);
+            cells.filter(e => (d.month !== e.month)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
+            cells.filter(e => (d.value !== e.value)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
+
+
+            d3.select(this)
+              .raise() // bring to front
+              .style("stroke", "#1b70a7") //blue
+              .style("stroke-width", 2);
+
+            chosen = true;
+          } else { //chosen == true
+            d3.select(this).style("stroke", null);
+            cells.style("fill", d => scale.color(d.value)).style("fill-opacity", "1");
+            cells.style("stroke", d => scale.color(d.value)).style("fill-opacity", "1");
+            chosen = false;
+          }
+        });
 
       }
 
