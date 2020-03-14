@@ -165,6 +165,8 @@
 
         let ctgMap = {}; //call type group map
         let nbhMap = {}; //beighborhood map
+        let nbhdNameList = [];
+        let nbhdListCount = 0;
 
         let currCount = 0;
         let parseDateName = d3.timeParse('%m/%d/%Y');
@@ -186,23 +188,21 @@
           var typeName = callTypeGroup;
           var nbhd = neighborhood;
           var dateNum = monthNumberName;
-      //    console.log("month: " + dateNum);
+
           var monthNum = formatDateNumber(parseDateName(dateNum));
           var monthName = formatDateName(parseDateName(dateNum));
-        //  console.log("\t ==> " + monthName + " = " + monthNum);
-
 
 
           if(typeName == "") {
               typeName = "NullType";
           }
-    //      console.log("ctg: " + typeName);
+
           var monthArrIndex = parseInt(monthNum, 10) - 1;
-          //        console.log("month index: " + monthArrIndex);
+
 
           if(ctgMap[typeName]) {
               monthList = ctgMap[typeName];
-      //        console.log("has type --- " + typeName + ": " + monthList + ";\n");
+
               origCount = monthList[monthArrIndex];
               monthList[monthArrIndex] = origCount + 1;
 
@@ -213,10 +213,47 @@
           ctgMap[typeName] = monthList;
 
 
-          nbhMap[neighborhood] = nbhd;
+          if(ctgMap['nbhdList']) {
+            nbhdList = ctgMap['nbhdList'];
 
+            if(nbhdList[neighborhood]) {
 
-          console.log(nbhMap);
+              if(nbhdList[neighborhood][typeName]) {
+                monthList = nbhdList[neighborhood][typeName];
+                origCount = monthList[monthArrIndex];
+                monthList[monthArrIndex] = origCount + 1;
+                nbhdList[neighborhood][typeName] = monthList;
+
+              } else {
+                nbhdList[neighborhood][typeName] = [];
+                monthList = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+                monthList[monthArrIndex] = 1.0;
+                nbhdList[neighborhood][typeName] = monthList;
+              }
+
+            } else {
+              nbhdNameList[nbhdListCount] = neighborhood;
+              nbhdListCount ++;
+
+              nbhdList[neighborhood]= [];
+              nbhdList[neighborhood][typeName] = [];
+              monthList = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+              monthList[monthArrIndex] = 1.0;
+              nbhdList[neighborhood][typeName] = monthList;
+            }
+
+          } else {
+
+            nbhdList = [];
+            nbhdList[neighborhood] = [];
+            nbhdList[neighborhood][typeName] = [];
+            monthList = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+            monthList[monthArrIndex] = 1.0;
+            nbhdList[neighborhood][typeName] = monthList;
+            ctgMap['nbhdList'] = nbhdList;
+
+          }
+
 
           return ctgMap;
       }
@@ -240,8 +277,8 @@
 
 
 
-      function convertData(map, nbhMap) {
-        console.log(nbhMap);
+      function convertData(map) {
+        console.log(ctgMap);
         getDailyAverage(map, 'Fire');
         getDailyAverage(map, 'Potentially Life-Threatening');
         getDailyAverage(map, 'Alarm');
@@ -253,13 +290,11 @@
         console.log("look at key:" + ctgMap['Alarm']);
         console.log("look at key:" + ctgMap['Non Life-threatening']);
         console.log("look at key:" + ctgMap['NullType']);
+
+        console.log("look at nbhd: " + ctgMap['nbhdList']);
         let res = [];
         let oneRow = {};
         oneRow.values = [];
-
-        console.log(nbhMap);
-//        nbhd =  nbhMap[neighborhood];
-//        oneRow[nbhd] = nbhd;
 
         count = 0;
         oneRow['callTypeGroup'] = "Fire";
@@ -327,14 +362,14 @@
 
         console.log(res);
 
-        console.log("ending of func2");
         return res;
       }
 
 
       function drawAxis(data) {
-        console.log("drawmap.");
+
         console.log(data);
+
 
         let ctg = callTypeGroupName;
 //        console.log(ctg);
@@ -370,6 +405,7 @@
 
 
       function drawHeatmap(data) {
+        console.log(ctgMap);
 
         allValues = ctgMap['Fire'].concat(ctgMap['Potentially Life-Threatening'],
                 ctgMap['Alarm'], ctgMap['Non Life-threatening'], ctgMap['NullType'])
@@ -389,7 +425,6 @@
           .append("g");
         rows.attr("class", "cell");
         rows.attr("transform", function(d) {
-
           return translate(0, scale.y(d['callTypeGroup']));
         });
 
@@ -417,7 +452,7 @@
             cells.filter(e => (d.month !== e.month)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
             cells.filter(e => (d.value !== e.value)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
 
-
+            drawBarChart(d.value, d.month);
             d3.select(this)
               .raise() // bring to front
               .style("stroke", "#1b70a7") //blue
@@ -435,6 +470,58 @@
       }
 
 
+      function drawBarChart(callTypeGroupValue, month) {
+        console.log("drawing bar chart!");
+        m = 0;
+        monthNum = -1;
+        while (m < 12) {
+          if(monthColNames[m] == month) {
+            monthNum = m;
+            break;
+          }
+          m++;
+        }
+        console.log("month index: " + monthNum);
+
+        if(ctgMap['Fire'][monthNum] == callTypeGroupValue) {
+          callTypeG = "Fire";
+        } else if(ctgMap['Potentially Life-Threatening'][monthNum] == callTypeGroupValue) {
+          callTypeG = "Potentially Life-Threatening";
+        } else if(ctgMap['Alarm'][monthNum] == callTypeGroupValue) {
+          callTypeG = "Alarm";
+        } else if(ctgMap['Non Life-threatening'][monthNum] == callTypeGroupValue) {
+          callTypeG = "Non Life-threatening";
+        } else if(ctgMap['NullType'][monthNum] == callTypeGroupValue) {
+          callTypeG = "NullType";
+        }
+
+        console.log(callTypeG);
+
+        //here should use: monthNum, callTypeG
+        console.log(nbhdNameList);
+        console.log(ctgMap['nbhdList']);
+        h = 0;
+      //  barChartData = {};
+
+        while (h < 41) {
+          console.log(nbhdNameList[h]);
+          currNBHD = nbhdNameList[h];
+          console.log(ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]);
+
+    
+
+          h++;
+        }
+
+
+
+        //to get neighborhood list...
+
+
+
+      }
+
+
       function drawColorLegend() {
         const legendWidth = 200;
         const legendHeight = 20;
@@ -443,7 +530,6 @@
         const group = svg.append("g");
         group.attr('id', 'color-legend');
 
-        console.log("legend position: " + (config.svg.width - config.margin.right));
         // shift legend to appropriate position
         group.attr('transform', translate(config.svg.width - config.margin.right - legendWidth - 30, config.margin.top - 10));
 
@@ -503,7 +589,7 @@
 
       // helper method to make translating easier
       function translate(x, y) {
-        console.log('translate(' + x + ',' + y + ')');
+
         return 'translate(' + x + ',' + y + ')';
       }
 
