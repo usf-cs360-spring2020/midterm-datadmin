@@ -108,7 +108,7 @@
           'plot': {}
         };
 
-        config.svg.height = 360;
+        config.svg.height = 900;
         config.svg.width = 1200; // golden ratio
 
         config.margin.top = 10;
@@ -119,7 +119,7 @@
         config.plot.x = config.margin.left;
         config.plot.y = config.margin.top + 80;
         config.plot.width = config.svg.width - config.margin.left - config.margin.right;
-        config.plot.height = config.svg.height - config.margin.top - config.margin.bottom - 160;
+        config.plot.height = config.svg.height - config.margin.top - config.margin.bottom - 720;
 
 
         // setup svg
@@ -443,7 +443,7 @@
         cells.style("fill", d => scale.color(d.value));
         cells.style("stroke", d => scale.color(d.value));
 
-
+        drawBarChartAxis();
         chosen = false;
         cells.on("click", function(d) {
 
@@ -469,6 +469,48 @@
 
       }
 
+      function drawBarChartAxis() {
+        nbhdNameList = nbhdNameList.sort(function(a, b) {
+          return d3.ascending(a, b);
+        });
+        
+        let bcScale = {};
+
+        bcScale.x = d3.scaleBand();
+        bcScale.x.range([0, config.plot.width]);
+
+        bcScale.y = d3.scaleBand();
+        bcScale.y.range([config.plot.height + 360, 0]);
+
+        bcScale.x.domain([0, 210]);
+        bcScale.y.domain(nbhdNameList);
+
+        let bcAxis = {};  // axes for data
+        bcAxis.x = d3.axisBottom(bcScale.x);
+        bcAxis.x.tickPadding(0);
+
+        bcAxis.y = d3.axisLeft(bcScale.y);
+        bcAxis.y.tickPadding(0);
+
+        let bx = svg.append('g');
+        bx.attr("id", "x-axis");
+        bx.attr("class", "axis");
+        plotX = config.plot.x;
+        plotYH = config.plot.y + config.plot.height;
+
+        bx.attr('transform', translate(plotX , plotYH + 560));
+        bx.call(bcAxis.x);
+
+        let by = svg.append('g');
+        by.attr("id", "y-axis");
+        by.attr("class", "axis");
+
+        plotY = config.plot.y;
+
+        by.attr('transform', translate(config.plot.x, config.plot.y + 200));
+        by.call(bcAxis.y);
+      }
+
 
       function drawBarChart(callTypeGroupValue, month) {
         console.log("drawing bar chart!");
@@ -481,7 +523,16 @@
           }
           m++;
         }
+
         console.log("month index: " + monthNum);
+        if(monthNum == 1) { // Feburary
+          dayInMonth = 28.0;
+        } else if (monthNum == 3 || monthNum == 5 || monthNum == 8 || monthNum == 10) { //April, June, September, November
+          dayInMonth = 30.0;
+        } else {
+          dayInMonth = 31.0;
+        }
+
 
         if(ctgMap['Fire'][monthNum] == callTypeGroupValue) {
           callTypeG = "Fire";
@@ -495,27 +546,31 @@
           callTypeG = "NullType";
         }
 
-        console.log(callTypeG);
-
-        //here should use: monthNum, callTypeG
-        console.log(nbhdNameList);
-        console.log(ctgMap['nbhdList']);
         h = 0;
-      //  barChartData = {};
-
+        barChartData = [];
+        barChartData['area'] = [];
+        barChartData['incidentCount'] = [];
         while (h < 41) {
-          console.log(nbhdNameList[h]);
-          currNBHD = nbhdNameList[h];
-          console.log(ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]);
 
-    
+          currNBHD = nbhdNameList[h];
+
+          barChartData['area'][h] = currNBHD;
+          barChartData['incidentCount'][h] = ctgMap['nbhdList'][currNBHD][callTypeG][monthNum] / dayInMonth;
 
           h++;
         }
+  //      console.log(barChartData);
 
 
 
-        //to get neighborhood list...
+        svg.selectAll("myRect")
+          .data(barChartData)
+          .enter()
+          .append("rect")
+          .attr("x",  plotX)
+          .attr("y", function(d) { return y(d['area']); })
+          .attr("width", function(d) { return x(d['incidentCount']); })
+          .attr("height", 20 );
 
 
 
