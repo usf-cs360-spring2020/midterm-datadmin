@@ -161,6 +161,11 @@
         axis.y = d3.axisLeft(scale.y);
         axis.y.tickPadding(0);
 
+        let bcScale = {};
+        let bcAxis = {};
+        let bx, by;
+
+
         var callTypeGroupName = ["Fire", "Potentially Life-Threatening", "Alarm", "Non Life-threatening", "NullType"]
 
         let ctgMap = {}; //call type group map
@@ -277,11 +282,11 @@
         m = 0;
         while (m < 12) {
           if(m == 1) { // Feburary
-            ctgMap[key][m] = (ctgMap[key][m] / 28).toFixed(1);
+            ctgMap[key][m] = (ctgMap[key][m] / 28).toFixed(2);
           } else if (m == 3 || m == 5 || m == 8 || m == 10) { //April, June, September, November
-            ctgMap[key][m] = (ctgMap[key][m] / 30).toFixed(1);
+            ctgMap[key][m] = (ctgMap[key][m] / 30).toFixed(2);
           } else {
-            ctgMap[key][m] = (ctgMap[key][m] / 31).toFixed(1);;
+            ctgMap[key][m] = (ctgMap[key][m] / 31).toFixed(2);;
           }
           m++;
         }
@@ -292,86 +297,30 @@
 
       function convertData(map) {
         console.log(ctgMap);
-        getDailyAverage(map, 'Fire');
-        getDailyAverage(map, 'Potentially Life-Threatening');
-        getDailyAverage(map, 'Alarm');
-        getDailyAverage(map, 'Non Life-threatening');
-        getDailyAverage(map, 'NullType');
+        console.log(nbhdListCount);
 
-        console.log("look at key:" + ctgMap['Fire']);
-        console.log("look at key:" + ctgMap['Potentially Life-Threatening']);
-        console.log("look at key:" + ctgMap['Alarm']);
-        console.log("look at key:" + ctgMap['Non Life-threatening']);
-        console.log("look at key:" + ctgMap['NullType']);
-
-        console.log("look at nbhd: " + ctgMap['nbhdList']);
+        //callTypeGroupName
         let res = [];
-        let oneRow = {};
-        oneRow.values = [];
 
-        count = 0;
-        oneRow['callTypeGroup'] = "Fire";
-        while(count < 12) {
-          oneRow.values.push({
-            'month': monthColNames[count],
-            'value': ctgMap['Fire'][count]
-          });
-          count++;
+        i = 0;
+        while( i < 5) {
+
+          let oneRow = {};
+          oneRow.values = [];
+          type = callTypeGroupName[i];
+          getDailyAverage(map, type);
+          count = 0;
+          oneRow['callTypeGroup'] = type;
+          while(count < 12) {
+            oneRow.values.push({
+              'month': monthColNames[count],
+              'value': ctgMap[type][count]
+            });
+            count++;
+          }
+          res[i] = oneRow;
+          i ++;
         }
-        res[0] = oneRow;
-
-        oneRow = {};
-        oneRow.values = [];
-        oneRow['callTypeGroup'] = "Potentially Life-Threatening";
-        count = 0;
-        while(count < 12) {
-          oneRow.values.push({
-            'month': monthColNames[count],
-            'value': ctgMap['Potentially Life-Threatening'][count]
-          });
-          count++;
-        }
-        res[1] = oneRow;
-
-
-        oneRow = {};
-        oneRow.values = [];
-        oneRow['callTypeGroup'] = "Alarm";
-        count = 0;
-        while(count < 12) {
-          oneRow.values.push({
-            'month': monthColNames[count],
-            'value': ctgMap['Alarm'][count]
-          });
-          count++;
-        }
-        res[2] = oneRow;
-
-        oneRow = {};
-        oneRow.values = [];
-        oneRow['callTypeGroup'] = "Non Life-threatening";
-        count = 0;
-        while(count < 12) {
-          oneRow.values.push({
-            'month': monthColNames[count],
-            'value': ctgMap['Non Life-threatening'][count]
-          });
-          count++;
-        }
-        res[3] = oneRow;
-
-        oneRow = {};
-        oneRow.values = [];
-        oneRow['callTypeGroup'] = "NullType";
-        count = 0;
-        while(count < 12) {
-          oneRow.values.push({
-            'month': monthColNames[count],
-            'value': ctgMap['NullType'][count]
-          });
-          count++;
-        }
-        res[4] = oneRow;
 
         console.log(res);
 
@@ -383,12 +332,10 @@
 
         console.log(data);
 
-
         let ctg = callTypeGroupName;
-//        console.log(ctg);
 
         let dates = monthColNames;
-  //      console.log(dates);
+
 
         // now that we have data set the scale domain
         scale.x.domain(dates);
@@ -419,7 +366,7 @@
 
       function drawHeatmap(data) {
         console.log(ctgMap);
-
+        console.log(data);
         allValues = ctgMap['Fire'].concat(ctgMap['Potentially Life-Threatening'],
                 ctgMap['Alarm'], ctgMap['Non Life-threatening'], ctgMap['NullType'])
 
@@ -457,6 +404,8 @@
         cells.style("stroke", d => scale.color(d.value));
 
         drawBarChartAxis();
+        barChartData = generateBarChartData(100, 100);
+        drawBars(barChartData);
         chosen = false;
         cells.on("click", function(d) {
 
@@ -464,9 +413,7 @@
             console.log("click: " + d.month + ", " + d.value);
             cells.filter(e => (d.month !== e.month)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
             cells.filter(e => (d.value !== e.value)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
-
             barChartData = generateBarChartData(d.value, d.month);
-            drawBars(barChartData);
 
             d3.select(this)
               .raise() // bring to front
@@ -478,9 +425,13 @@
             d3.select(this).style("stroke", null);
             cells.style("fill", d => scale.color(d.value)).style("fill-opacity", "1");
             cells.style("stroke", d => scale.color(d.value)).style("fill-opacity", "1");
+            barChartData = generateBarChartData(100, 100);
             chosen = false;
           }
+          drawBars(barChartData);
+
         });
+
 
       }
 
@@ -489,7 +440,6 @@
           return d3.ascending(a, b);
         });
 
-        let bcScale = {};
 
         bcScale.x = d3.scaleBand();
         bcScale.x.range([0, config.plot.width]);
@@ -500,14 +450,14 @@
         bcScale.x.domain([0, 210]);
         bcScale.y.domain(nbhdNameList);
 
-        let bcAxis = {};  // axes for data
+
         bcAxis.x = d3.axisBottom(bcScale.x);
         bcAxis.x.tickPadding(0);
 
         bcAxis.y = d3.axisLeft(bcScale.y);
         bcAxis.y.tickPadding(0);
 
-        let bx = svg.append('g');
+        bx = svg.append('g');
         bx.attr("id", "x-axis");
         bx.attr("class", "axis");
         plotX = config.plot.x;
@@ -516,7 +466,7 @@
         bx.attr('transform', translate(plotX , plotYH + 560));
         bx.call(bcAxis.x);
 
-        let by = svg.append('g');
+        by = svg.append('g');
         by.attr("id", "y-axis");
         by.attr("class", "axis");
 
@@ -526,8 +476,19 @@
         by.call(bcAxis.y);
       }
 
+      function getDaysInMonth(monthNum) {
+        if(monthNum == 1) { // Feburary
+          daysInMonth = 28.0;
+        } else if (monthNum == 3 || monthNum == 5 || monthNum == 8 || monthNum == 10) { //April, June, September, November
+          daysInMonth = 30.0;
+        } else {
+          daysInMonth = 31.0;
+        }
+        return daysInMonth;
+      }
 
       function generateBarChartData(callTypeGroupValue, month) {
+
         console.log("drawing bar chart!");
         m = 0;
         monthNum = -1;
@@ -540,61 +501,99 @@
         }
 
         console.log("month index: " + monthNum);
-        if(monthNum == 1) { // Feburary
-          dayInMonth = 28.0;
-        } else if (monthNum == 3 || monthNum == 5 || monthNum == 8 || monthNum == 10) { //April, June, September, November
-          dayInMonth = 30.0;
-        } else {
-          dayInMonth = 31.0;
-        }
-
-
-        if(ctgMap['Fire'][monthNum] == callTypeGroupValue) {
-          callTypeG = "Fire";
-        } else if(ctgMap['Potentially Life-Threatening'][monthNum] == callTypeGroupValue) {
-          callTypeG = "Potentially Life-Threatening";
-        } else if(ctgMap['Alarm'][monthNum] == callTypeGroupValue) {
-          callTypeG = "Alarm";
-        } else if(ctgMap['Non Life-threatening'][monthNum] == callTypeGroupValue) {
-          callTypeG = "Non Life-threatening";
-        } else if(ctgMap['NullType'][monthNum] == callTypeGroupValue) {
-          console.log("!!");
-          callTypeG = "NullType";
-        }
-
-        h = 0;
+        daysInMonth = getDaysInMonth(monthNum);
         barChartData = [];
-        barChartData['area'] = [];
-        barChartData['incidentCount'] = [];
-        while (h < 41) {
+        if(callTypeGroupValue == 100) {
+          if(month == 100) {
+
+            q = 0;
+            countSum = 0.0;
+            while(q < nbhdListCount) {
+              t = 0;
+              oneRow = {};
+              oneRow['neighborhood'] = nbhdNameList[q];
+              oneRow.values = [];
+
+              while(t < 5) {
+                currTypeMonthList = ctgMap['nbhdList'][nbhdNameList[q]][callTypeGroupName[t]];
+
+                n = 0;
+
+                while(n < 12) {
+                  daysInMonth = getDaysInMonth(n);
+
+                  countSum = (parseFloat(countSum) + parseFloat(ctgMap['nbhdList'][nbhdNameList[q]][callTypeGroupName[t]][n] / daysInMonth)).toFixed(2);
+
+                  n ++;
+                }
+
+                t ++;
+              }
+              oneRow.values.push({
+                'area': nbhdNameList[q],
+                'incidentCount': countSum
+              });
+                barChartData.push(oneRow);
+
+              countSum = 0;
+              q ++;
+            }
+            console.log(barChartData);
+            return barChartData;
+          }
+        }
+
+        w = 0;
+        while(w < 5) {
+          if(ctgMap[callTypeGroupName[w]][monthNum] == callTypeGroupValue) {
+            callTypeG = callTypeGroupName[w];
+          }
+          w ++;
+        }
+
+        console.log(callTypeG + ", " + monthNum);
+        h = 0;
+
+        while (h < nbhdListCount) {
+          oneRow = {};
+          oneRow.values = [];
+          oneRow['neighborhood'] = nbhdNameList[h];
 
           currNBHD = nbhdNameList[h];
-
-          barChartData['area'][h] = currNBHD;
-          if(callTypeG == "NullType") {
-            console.log(ctgMap['nbhdList'][currNBHD]);
-            console.log(currNBHD);
-          }
-          barChartData['incidentCount'][h] = (ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]) / dayInMonth;
+          oneRow.values.push({
+            'area': nbhdNameList[h],
+            'incidentCount': ((ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]) / daysInMonth).toFixed(2)
+          });
+          barChartData.push(oneRow);
 
           h++;
         }
-  //      console.log(barChartData);
+
         return barChartData;
 
       }
 
-      function drawBars(data) {
+      function drawBars(barData) {
 
+      console.log(barData.values);
 
-        svg.selectAll("myRect")
-          .data(data)
-          .enter()
+      let rectangles = svg.selectAll(".bar")
+        .data(barData)
+        .enter()
+          .append('g')
+          .attr("class", "g")
+          .attr('transform', translate(plotX , plotYH + 560));
+      rectangles.selectAll("rect")
+        .data(d => d.values)
+        .enter()
           .append("rect")
-          .attr("x",  plotX)
-          .attr("y", function(d) { return y(d['area']); })
-          .attr("width", function(d) { return x(d['incidentCount']); })
-          .attr("height", 20 );
+          .attr("id", "bars")
+          .attr("width", d => bcScale.x(d.incidentCount))
+          .attr("x", bcScale.x.bandwidth())
+          .attr("y", d => bcScale.y(d.area))
+          .attr("height", bcScale.y.bandwidth())
+          .attr('transform', translate(300, 300))
+          .style("stroke", "#1b70a7");
 
 
 
@@ -646,7 +645,6 @@
         // we have to first add gradients
         const defs = svg.append('defs');
 
-        console.log(scale.color.ticks());
         // add a color stop per data tick
         // input  (ticks)   : [0.2, ..., 100, ..., 200.3]
         // output (percents): [  0, ..., 50, ..., 100]
