@@ -181,6 +181,7 @@
 
 
         function recordRow(row, index) {
+
           let callTypeGroup = row['CallTypeGroup'];
           let monthNumberName= row['ResponseDtTm'];
           let neighborhood = row['Neighborhoods'];
@@ -199,7 +200,6 @@
 
           var monthArrIndex = parseInt(monthNum, 10) - 1;
 
-
           if(ctgMap[typeName]) {
               monthList = ctgMap[typeName];
 
@@ -214,6 +214,7 @@
 
 
           if(ctgMap['nbhdList']) {
+
             nbhdList = ctgMap['nbhdList'];
 
             if(nbhdList[neighborhood]) {
@@ -241,7 +242,6 @@
               monthList[monthArrIndex] = 1.0;
               nbhdList[neighborhood][typeName] = monthList;
             }
-
           } else {
 
             nbhdList = [];
@@ -251,7 +251,20 @@
             monthList[monthArrIndex] = 1.0;
             nbhdList[neighborhood][typeName] = monthList;
             ctgMap['nbhdList'] = nbhdList;
+          }
 
+          mp = 0;
+          while(mp < 5) {
+            if(nbhdList[neighborhood][callTypeGroupName[mp]]) {
+              list = nbhdList[neighborhood][callTypeGroupName[mp]];
+            } else {
+              nbhdList[neighborhood][callTypeGroupName[mp]] = [];
+              monthList = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+              monthList[monthArrIndex] = 1.0;
+              nbhdList[neighborhood][callTypeGroupName[mp]] = monthList;
+              ctgMap['nbhdList'] = nbhdList;
+            }
+            mp ++;
           }
 
 
@@ -452,7 +465,9 @@
             cells.filter(e => (d.month !== e.month)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
             cells.filter(e => (d.value !== e.value)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
 
-            drawBarChart(d.value, d.month);
+            barChartData = generateBarChartData(d.value, d.month);
+            drawBars(barChartData);
+
             d3.select(this)
               .raise() // bring to front
               .style("stroke", "#1b70a7") //blue
@@ -473,7 +488,7 @@
         nbhdNameList = nbhdNameList.sort(function(a, b) {
           return d3.ascending(a, b);
         });
-        
+
         let bcScale = {};
 
         bcScale.x = d3.scaleBand();
@@ -512,7 +527,7 @@
       }
 
 
-      function drawBarChart(callTypeGroupValue, month) {
+      function generateBarChartData(callTypeGroupValue, month) {
         console.log("drawing bar chart!");
         m = 0;
         monthNum = -1;
@@ -543,6 +558,7 @@
         } else if(ctgMap['Non Life-threatening'][monthNum] == callTypeGroupValue) {
           callTypeG = "Non Life-threatening";
         } else if(ctgMap['NullType'][monthNum] == callTypeGroupValue) {
+          console.log("!!");
           callTypeG = "NullType";
         }
 
@@ -555,16 +571,24 @@
           currNBHD = nbhdNameList[h];
 
           barChartData['area'][h] = currNBHD;
-          barChartData['incidentCount'][h] = ctgMap['nbhdList'][currNBHD][callTypeG][monthNum] / dayInMonth;
+          if(callTypeG == "NullType") {
+            console.log(ctgMap['nbhdList'][currNBHD]);
+            console.log(currNBHD);
+          }
+          barChartData['incidentCount'][h] = (ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]) / dayInMonth;
 
           h++;
         }
   //      console.log(barChartData);
+        return barChartData;
 
+      }
+
+      function drawBars(data) {
 
 
         svg.selectAll("myRect")
-          .data(barChartData)
+          .data(data)
           .enter()
           .append("rect")
           .attr("x",  plotX)
