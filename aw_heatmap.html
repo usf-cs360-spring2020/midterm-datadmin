@@ -403,43 +403,53 @@
         cells.style("fill", d => scale.color(d.value));
         cells.style("stroke", d => scale.color(d.value));
 
-        drawBarChartAxis();
+        drawBarChartAxis(800);
         barChartData = generateBarChartData(100, 100);
         drawBars(barChartData);
         chosen = false;
         cells.on("click", function(d) {
-
+          d3.selectAll("#bars").remove();
           if(chosen == false) {
-            console.log("click: " + d.month + ", " + d.value);
-            cells.filter(e => (d.month !== e.month)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
-            cells.filter(e => (d.value !== e.value)).transition().style("fill", "#edf5fa").style("fill-opacity", "0.9");
-            barChartData = generateBarChartData(d.value, d.month);
 
+            console.log("click: " + d.month + ", " + d.value);
+            cells.filter(e => (d.month !== e.month)).transition().style("fill", "#e5e5e5").style("fill-opacity", "0.5");
+            cells.filter(e => (d.month !== e.month)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
+            cells.filter(e => (d.value !== e.value)).transition().style("fill", "#e5e5e5").style("fill-opacity", "0.5");
+            cells.filter(e => (d.value !== e.value)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
+
+            barChartData = generateBarChartData(d.value, d.month);
+            xDomainMax = 50;
             d3.select(this)
               .raise() // bring to front
               .style("stroke", "#1b70a7") //blue
               .style("stroke-width", 2);
 
             chosen = true;
+            drawBars(barChartData, true);
           } else { //chosen == true
             d3.select(this).style("stroke", null);
             cells.style("fill", d => scale.color(d.value)).style("fill-opacity", "1");
             cells.style("stroke", d => scale.color(d.value)).style("fill-opacity", "1");
+
             barChartData = generateBarChartData(100, 100);
+            xDomainMax = 800;
             chosen = false;
+            drawBars(barChartData, false);
           }
-          drawBars(barChartData);
 
+          console.log("drawing new bar chart!");
+
+          drawBarChartAxis(xDomainMax);
         });
-
 
       }
 
-      function drawBarChartAxis() {
+      function drawBarChartAxis(xDomainMax) {
         nbhdNameList = nbhdNameList.sort(function(a, b) {
-          return d3.ascending(a, b);
+          return d3.descending(a, b);
         });
 
+        d3.selectAll("#bcx-axis").remove();
 
         bcScale.x = d3.scaleBand();
         bcScale.x.range([0, config.plot.width]);
@@ -447,9 +457,8 @@
         bcScale.y = d3.scaleBand();
         bcScale.y.range([config.plot.height + 360, 0]);
 
-        bcScale.x.domain([0, 210]);
+        bcScale.x.domain([0, xDomainMax]);
         bcScale.y.domain(nbhdNameList);
-
 
         bcAxis.x = d3.axisBottom(bcScale.x);
         bcAxis.x.tickPadding(0);
@@ -458,7 +467,7 @@
         bcAxis.y.tickPadding(0);
 
         bx = svg.append('g');
-        bx.attr("id", "x-axis");
+        bx.attr("id", "bcx-axis");
         bx.attr("class", "axis");
         plotX = config.plot.x;
         plotYH = config.plot.y + config.plot.height;
@@ -467,7 +476,7 @@
         bx.call(bcAxis.x);
 
         by = svg.append('g');
-        by.attr("id", "y-axis");
+        by.attr("id", "bcy-axis");
         by.attr("class", "axis");
 
         plotY = config.plot.y;
@@ -503,6 +512,8 @@
         console.log("month index: " + monthNum);
         daysInMonth = getDaysInMonth(monthNum);
         barChartData = [];
+        barChartData.keys = nbhdNameList;
+
         if(callTypeGroupValue == 100) {
           if(month == 100) {
 
@@ -510,8 +521,8 @@
             countSum = 0.0;
             while(q < nbhdListCount) {
               t = 0;
-              oneRow = {};
-              oneRow['neighborhood'] = nbhdNameList[q];
+              oneRow = new Object();
+              oneRow.keys= nbhdNameList[q];
               oneRow.values = [];
 
               while(t < 5) {
@@ -533,7 +544,7 @@
                 'area': nbhdNameList[q],
                 'incidentCount': countSum
               });
-                barChartData.push(oneRow);
+              barChartData.push(oneRow);
 
               countSum = 0;
               q ++;
@@ -543,6 +554,7 @@
           }
         }
 
+        barChartData.keys = nbhdNameList;
         w = 0;
         while(w < 5) {
           if(ctgMap[callTypeGroupName[w]][monthNum] == callTypeGroupValue) {
@@ -555,9 +567,9 @@
         h = 0;
 
         while (h < nbhdListCount) {
-          oneRow = {};
+          oneRow = new Object();
+          oneRow.keys= nbhdNameList[h];
           oneRow.values = [];
-          oneRow['neighborhood'] = nbhdNameList[h];
 
           currNBHD = nbhdNameList[h];
           oneRow.values.push({
@@ -573,29 +585,37 @@
 
       }
 
-      function drawBars(barData) {
+      function drawBars(barData, individual) {
 
-      console.log(barData.values);
+        console.log(barData);
+        if(individual == true) {
+          console.log("times 16");
+          amplifying = 16;
+        } else {
+          amplifying = 1;
+        }
 
-      let rectangles = svg.selectAll(".bar")
-        .data(barData)
-        .enter()
-          .append('g')
-          .attr("class", "g")
-          .attr('transform', translate(plotX , plotYH + 560));
-      rectangles.selectAll("rect")
-        .data(d => d.values)
-        .enter()
-          .append("rect")
-          .attr("id", "bars")
-          .attr("width", d => bcScale.x(d.incidentCount))
-          .attr("x", bcScale.x.bandwidth())
-          .attr("y", d => bcScale.y(d.area))
-          .attr("height", bcScale.y.bandwidth())
-          .attr('transform', translate(300, 300))
-          .style("stroke", "#1b70a7");
+        var nbhdName = barData.map(d => d.keys);
 
-
+        let rectangles = svg.selectAll(".bar")
+          .data(barData)
+          .enter()
+            .append('g')
+            .attr("class", "g")
+            .attr("transform", function(d) { return "translate(" +  plotX + ", " + (bcScale.y(d.keys) / 600.0) + ")"; });
+        rectangles.selectAll("rect")
+          .data(d => d.values)
+          .enter()
+            .append("rect")
+            .attr("id", "bars")
+            .attr("width", function(d) {
+              barLen = +(d.incidentCount) * amplifying;
+              console.log(barLen);
+              return barLen;})
+            .attr("height", bcScale.y.bandwidth() - 5.5)
+            .attr("x", plotX - 159)
+            .attr("y", d => bcScale.y(d.area) + 292.5)
+            .style("fill", "#1b70a7");
 
       }
 
