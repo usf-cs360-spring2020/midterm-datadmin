@@ -112,7 +112,7 @@
         config.svg.width = 1200; // golden ratio
 
         config.margin.top = 10;
-        config.margin.right = 10;
+        config.margin.right = 30;
         config.margin.bottom = 30;
         config.margin.left = 160;
 
@@ -172,6 +172,7 @@
         let nbhMap = {}; //beighborhood map
         let nbhdNameList = [];
         let nbhdListCount = 0;
+        let maxBarLen = -1;
 
         let currCount = 0;
         let parseDateName = d3.timeParse('%m/%d/%Y');
@@ -181,6 +182,7 @@
             'July', 'August', 'September', 'October', 'November', 'December'];
 
         d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap);
+        console.log(nbhdNameList);
         drawColorLegend();
 
 
@@ -248,6 +250,10 @@
               nbhdList[neighborhood][typeName] = monthList;
             }
           } else {
+            console.log("Creating for " + neighborhood);
+            nbhdNameList[nbhdListCount] = neighborhood;
+            nbhdListCount ++;
+
 
             nbhdList = [];
             nbhdList[neighborhood] = [];
@@ -388,7 +394,6 @@
           return translate(0, scale.y(d['callTypeGroup']));
         });
 
-
         let cells = rows.selectAll("rect")
           .data(d => d.values)
           .enter()
@@ -403,8 +408,10 @@
         cells.style("fill", d => scale.color(d.value));
         cells.style("stroke", d => scale.color(d.value));
 
-        drawBarChartAxis(800);
+        xDomainMax = 1000;
         barChartData = generateBarChartData(100, 100);
+        drawBarChartAxis(1000, barChartData);
+
         drawBars(barChartData);
         chosen = false;
         cells.on("click", function(d) {
@@ -432,30 +439,33 @@
             cells.style("stroke", d => scale.color(d.value)).style("fill-opacity", "1");
 
             barChartData = generateBarChartData(100, 100);
-            xDomainMax = 800;
+            xDomainMax = 1000;
             chosen = false;
             drawBars(barChartData, false);
+            maxBarLen = -1;
           }
 
           console.log("drawing new bar chart!");
 
-          drawBarChartAxis(xDomainMax);
+          drawBarChartAxis(xDomainMax, barChartData);
         });
 
       }
 
-      function drawBarChartAxis(xDomainMax) {
+      function drawBarChartAxis(xDomainMax, barChartData) {
         nbhdNameList = nbhdNameList.sort(function(a, b) {
           return d3.descending(a, b);
         });
 
         d3.selectAll("#bcx-axis").remove();
 
-        bcScale.x = d3.scaleBand();
+        bcScale.x = d3.scaleLinear();
         bcScale.x.range([0, config.plot.width]);
 
         bcScale.y = d3.scaleBand();
         bcScale.y.range([config.plot.height + 360, 0]);
+
+        tick = xDomainMax/2;
 
         bcScale.x.domain([0, xDomainMax]);
         bcScale.y.domain(nbhdNameList);
@@ -554,6 +564,7 @@
           }
         }
 
+
         barChartData.keys = nbhdNameList;
         w = 0;
         while(w < 5) {
@@ -570,17 +581,21 @@
           oneRow = new Object();
           oneRow.keys= nbhdNameList[h];
           oneRow.values = [];
-
           currNBHD = nbhdNameList[h];
+          currCount = ((ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]) / daysInMonth).toFixed(2);
+          if(currCount > maxBarLen) {
+            maxBarLen = currCount;
+          }
+
           oneRow.values.push({
             'area': nbhdNameList[h],
-            'incidentCount': ((ctgMap['nbhdList'][currNBHD][callTypeG][monthNum]) / daysInMonth).toFixed(2)
+            'incidentCount': currCount
           });
           barChartData.push(oneRow);
 
           h++;
         }
-
+        console.log(maxBarLen);
         return barChartData;
 
       }
@@ -588,9 +603,10 @@
       function drawBars(barData, individual) {
 
         console.log(barData);
+
         if(individual == true) {
           console.log("times 16");
-          amplifying = 16;
+          amplifying = 20;
         } else {
           amplifying = 1;
         }
@@ -610,7 +626,7 @@
             .attr("id", "bars")
             .attr("width", function(d) {
               barLen = +(d.incidentCount) * amplifying;
-              console.log(barLen);
+
               return barLen;})
             .attr("height", bcScale.y.bandwidth() - 5.5)
             .attr("x", plotX - 159)
