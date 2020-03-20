@@ -181,7 +181,7 @@
         monthColNames = ['January', 'Feburary', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
 
-        d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap);
+        d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap).then(drawTitleCaptions);
         console.log(nbhdNameList);
         drawColorLegend();
 
@@ -423,8 +423,10 @@
             cells.filter(e => (d.month !== e.month)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
             cells.filter(e => (d.value !== e.value)).transition().style("fill", "#e5e5e5").style("fill-opacity", "0.5");
             cells.filter(e => (d.value !== e.value)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
-            
+
             boxValue = d.value;
+
+
             //TODO
             barChartData = generateBarChartData(d.value, d.month);
             xDomainMax = 50;
@@ -451,6 +453,36 @@
         });
 
       }
+
+      function drawTitleCaptions() {
+
+        const hmTitle = svg.append('text')
+          .text('Number of Daily Average Incidents by various call type groups along the year of 2019');
+        hmTitle.attr('x', plotX + 287);
+        hmTitle.attr('y', plotYH - 200);
+        hmTitle.attr('text-anchor', 'middle');
+
+        const hmYName = svg.append('text')
+          .text('Call Type Group');
+        hmYName.attr('x', plotX - 112);
+        hmYName.attr('y', plotYH - 148);
+
+        const hmXName = svg.append('text')
+          .text('Response Date by Months in 2019');
+        hmXName.attr('x', plotX + 776);
+        hmXName.attr('y', plotYH + 32);
+
+        const caption = svg.append('text')
+          .text('Graph by Alex Wang. Source: https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3');
+        caption.attr('x', plotX - 160);
+        caption.attr('y', plotYH + 600);
+
+
+
+
+
+      }
+
 
       function drawBarChartAxis(xDomainMax, barChartData) {
         nbhdNameList = nbhdNameList.sort(function(a, b) {
@@ -733,6 +765,10 @@
         Also it shows the call type distributions along the year, and we could know that the calls to SFFD is not dependent on season or month or certain holidays, etc.
         Furthremore, if we switch between different data types, the specific number of calls for the same month on neightborhood would be different, so it could be potentially useful for SFFD to deploy different resource near different neighborhood, etc.</p>
 
+        <h3> Inspiration:</h3>
+        <p> https://blockbuilder.org/sjengle/22051097a8090fa227cbd80cdc2bad03
+        https://blockbuilder.org/sjengle/47c5c20a18ec29f4e2b82905bdb7fe95
+      https://observablehq.com/@sjengle/interactivity-lab?collection=@sjengle/interactive-scatterplot</p>
   <!-- Mobile menu responsiveness -->
   <!-- https://bulma.io/documentation/components/navbar/ -->
   <script>
