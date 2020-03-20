@@ -458,14 +458,15 @@
 
         const hmTitle = svg.append('text')
           .text('Number of Daily Average Incidents by various call type groups along the year of 2019');
-        hmTitle.attr('x', plotX + 287);
-        hmTitle.attr('y', plotYH - 200);
+        hmTitle.attr('x', plotX + 460);
+        hmTitle.attr('y', plotYH - 170);
+        hmTitle.attr('font-size', '21px');
         hmTitle.attr('text-anchor', 'middle');
 
         const hmYName = svg.append('text')
           .text('Call Type Group');
-        hmYName.attr('x', plotX - 112);
-        hmYName.attr('y', plotYH - 148);
+        hmYName.attr('x', plotX - 109);
+        hmYName.attr('y', plotYH - 144);
 
         const hmXName = svg.append('text')
           .text('Response Date by Months in 2019');
@@ -475,10 +476,23 @@
         const caption = svg.append('text')
           .text('Graph by Alex Wang. Source: https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3');
         caption.attr('x', plotX - 160);
-        caption.attr('y', plotYH + 600);
+        caption.attr('y', plotYH + 660);
 
+        const bcTitle = svg.append('text')
+          .text('Number of Incidents in vairous of neighborhoods');
+        bcTitle.attr('font-size', '21px');
+        bcTitle.attr('x', plotX + 86);
+        bcTitle.attr('y', plotYH + 52);
 
+        const bcYName = svg.append('text')
+          .text('Neiborhoods');
+        bcYName.attr('x', plotX - 90);
+        bcYName.attr('y', plotYH + 55);
 
+        const bcXName = svg.append('text')
+          .text('Average Daily Incidents');
+        bcXName.attr('x', plotX + 850);
+        bcXName.attr('y', plotYH + 590);
 
 
       }
