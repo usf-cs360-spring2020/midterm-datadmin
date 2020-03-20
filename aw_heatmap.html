@@ -423,7 +423,9 @@
             cells.filter(e => (d.month !== e.month)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
             cells.filter(e => (d.value !== e.value)).transition().style("fill", "#e5e5e5").style("fill-opacity", "0.5");
             cells.filter(e => (d.value !== e.value)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
-
+            
+            boxValue = d.value;
+            //TODO
             barChartData = generateBarChartData(d.value, d.month);
             xDomainMax = 50;
             d3.select(this)
@@ -444,8 +446,6 @@
             drawBars(barChartData, false);
             maxBarLen = -1;
           }
-
-          console.log("drawing new bar chart!");
 
           drawBarChartAxis(xDomainMax, barChartData);
         });
@@ -605,7 +605,6 @@
         console.log(barData);
 
         if(individual == true) {
-          console.log("times 16");
           amplifying = 20;
         } else {
           amplifying = 1;
