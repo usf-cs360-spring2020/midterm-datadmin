@@ -465,11 +465,13 @@
 
         const hmYName = svg.append('text')
           .text('Call Type Group');
+        hmYName.attr('font-size', '16px');
         hmYName.attr('x', plotX - 109);
         hmYName.attr('y', plotYH - 144);
 
         const hmXName = svg.append('text')
           .text('Response Date by Months in 2019');
+        hmXName.attr('font-size', '16px');
         hmXName.attr('x', plotX + 776);
         hmXName.attr('y', plotYH + 32);
 
@@ -486,11 +488,13 @@
 
         const bcYName = svg.append('text')
           .text('Neiborhoods');
+        bcYName.attr('font-size', '16px');
         bcYName.attr('x', plotX - 90);
         bcYName.attr('y', plotYH + 55);
 
         const bcXName = svg.append('text')
           .text('Average Daily Incidents');
+        bcXName.attr('font-size', '16px');
         bcXName.attr('x', plotX + 851);
         bcXName.attr('y', plotYH + 590);
 
