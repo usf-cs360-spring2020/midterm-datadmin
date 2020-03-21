@@ -82,8 +82,9 @@
           Heatmap + bar chart by Alex Wang
         </p>
 
-        <h2 id="intro">Introduction</h2>
-        <p> This visualization explores how the responded calls distributed along the year of 2019 -- is there any months or season that fires were more likely to happen?
+        <h2 id="intro">Introduction: connection to the project theme</h2>
+        <p> This visualization explores the yearly work of SFFD that how it were distributed by time, by type and by place.
+        We might want to knoe how the responded calls distributed along the year of 2019 -- is there any months or season that fires were more likely to happen?
         Was there a period of time that SFFD were experiencing overwhelming workload? Also between the call type groups -- what kind of works were done the most by SFFD? Was fire rescuing the biggest part of SFFD's work?
         For neighborhoods, which were the neighborhoods experienced most help from SFFD in 2019? Were types of calls to and help from SFFD distributed evenly in that neighborhood? </p>
         <p>Those are question that we might want to know. Therefore, there is a heatmap that demonstrates how call type groups distributed among 12 months in 2019, and various bar charts that shows relative filtered data for each neighborhood.
@@ -820,11 +821,10 @@
         The bar charts are not sorting by high-to-low values because it would be too much movements when each click of heatmap-block would cause a change: since there are 42 neighborhoods
         and fixed position of them would help the reader locate specific neighborhood more quickly. Also, for the same neighborhood readers could have a chance to see that it might be leading in one call type group, but not in another.</p>
 
-        <h4>Discussion: findings</h4>
+        <h4>Theme related findings</h4>
         <p> Firstly, in the heatmap, we could see the comparison between months to know that how the fire calls distributed: there is actually no obvious huge difference of numbers of fire incidents among months. Therefore it seems that fires are not more likely to happen in some seasons or holidays,
           and firefighters are not having obvious "busy season" according to information we have so far.</p>
-        <p>    Moreover, take the example of Tenderloin, it often had most of calls in potentially-life-threatening, but it was not always the one with most fire calls, therefore it is possible that the data could be referable when SFFD is deploying resource and considering how to prepare different kinds of teams and tools
-          according to incidents that are more likely to happen in specific neighborhoods.</p>
+        <p> Moreover, take the example of Tenderloin, it often had most of calls in potentially-life-threatening, but it was not always the one with most fire calls, then the data could be potentially useful for SFFD to deploy specific more resource according to specific neighborhoods to rescue faster. </p>
 
 
 
@@ -836,29 +836,24 @@
 
 
         <h2>Progress from feedbacks</h2>
-        <!-- TODO: ORIGINAL PROTOTYPE-->
-        <h4> Peer feedbacks on prototype demonstration and my changes according to them: </h4>
-        <p> Some peer mentions that he/she does not quite clear about the theme, so </p>
-        //<!-- TODO:
-        The peer feedback you received and how this impacted the final version of your visualizations.
+        <h4> Feedbacks on prototypes and my changes according to them: </h4>
+        <h5> Original prototype</h5>
 
+        <p> Originally the prototype had some problems: </p>
+        <p> Firstly the "number of records" were used, and that was not recommended, because in the dataset, one incident could be counted for multiple times.
+        Therefore I changed to group the dataset by incident-id to make sure that each incident would be count only once.</p>
+        <p> Secondly, there was a lie factor problem that values for each month were sum, and since different months are not with same days, some months might have larger value probably because it contains more days, and
+          comparable values are not extracted correctly. Therefore later I switched to daily average to exclude the impact of different days in months.</p>
+        <img src="hm0.png" width="960" height="500">
 
-
-        -->
-        <h3> Planned interactivity</h3>
+        <h5> Planned interactivity</h5>
         <p> When clicking on specific box on heatmap, the relavent bar chart for that call type at that time for all neighborhoods would show.</p>
 
-        <img src="hm100.png" width="1440" height="900">
-        <img src="hm200.png" width="1440" height="900">
-        <img src="hm300.png" width="1440" height="900">
-        <img src="hm500.png" width="1440" height="900">
+        <img src="hm100.png" width="600" height="360">
+        <img src="hm200.png" width="600" height="360">
+        <img src="hm300.png" width="600" height="360">
+        <img src="hm500.png" width="600" height="360">
 
-
-        <h3> Connection to the project theme</h3>
-        <p> This visualization explore several situation about works in SFFD.
-          Firstly it shows how different call types take parts in all number of calls, so that we could know what kind of works do the SFFD do. For example, we would know that fire calls is not taking the major part of calls to SFFD.
-        Also it shows the call type distributions along the year, and we could know that the calls to SFFD is not dependent on season or month or certain holidays, etc.
-        Furthremore, if we switch between different data types, the specific number of calls for the same month on neightborhood would be different, so it could be potentially useful for SFFD to deploy different resource near different neighborhood, etc.</p>
 
   <!-- Mobile menu responsiveness -->
   <!-- https://bulma.io/documentation/components/navbar/ -->
