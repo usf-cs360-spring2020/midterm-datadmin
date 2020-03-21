@@ -416,6 +416,7 @@
         chosen = false;
         cells.on("click", function(d) {
           d3.selectAll("#bars").remove();
+          d3.selectAll("#block").remove();
           if(chosen == false) {
 
             console.log("click: " + d.month + ", " + d.value);
@@ -425,9 +426,14 @@
             cells.filter(e => (d.value !== e.value)).transition().style("stroke", "#e5e5e5").style("fill-opacity", "0.5");
 
             boxValue = d.value;
+            svg.append('text')
+              .text("Chosen value:  " + d.value + "  incident/day")
+              .attr("id", "block")
+              .attr('font-size', '26px')
+              .attr('x', plotX - 109)
+              .attr('y', plotYH - 200)
+              .style('fill', '#eb6a1c');
 
-
-            //TODO
             barChartData = generateBarChartData(d.value, d.month);
             xDomainMax = 50;
             d3.select(this)
@@ -674,13 +680,48 @@
             .append("rect")
             .attr("id", "bars")
             .attr("width", function(d) {
+          //    console.log(d.incidentCount);
               barLen = +(d.incidentCount) * amplifying;
-
               return barLen;})
-            .attr("height", bcScale.y.bandwidth() - 5.5)
+            .attr("height", bcScale.y.bandwidth() - 3)
             .attr("x", plotX - 159)
-            .attr("y", d => bcScale.y(d.area) + 292.5)
+            .attr("y", d => bcScale.y(d.area) + 291)
             .style("fill", "#1b70a7");
+
+
+
+        rectangles.on("mouseover", function(d) {
+          console.log(d.values[0].incidentCount);
+          currObj = d.values;
+        //  console.log(currObj.incidentCount);
+          d3.select(this)
+            .raise() // bring to front
+            .style("stroke", "orange")
+            .style("stroke-width", 2);
+
+          svg.append('text')
+              .text("Current value:  " + d.values[0].incidentCount + "  incident/day")
+              .attr("id", "batLabel")
+              .attr('font-size', '26px')
+              .attr('x', plotX)
+              .attr('y', plotYH + 600)
+              .style('fill', '#1b70a7');
+
+        });
+
+        rectangles.on("mouseout", function(d) {
+          d3.selectAll("#batLabel").remove();
+          d3.select(this).style("stroke", null);
+        });
+
+
+
+
+
+
+
+
+
 
       }
 
