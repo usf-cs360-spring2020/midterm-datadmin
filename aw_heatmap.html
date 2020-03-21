@@ -100,12 +100,12 @@
 
           <li><strong>Neighborhoods: </strong> Neighborhood District associated with this address, boundaries available here: <a href= https://data.sfgov.org/d/p5b7-5n3h>https://data.sfgov.org/d/p5b7-5n3h</a></li>
 
-          <li><strong>Number of Incidents: </strong> Count of incidents calculated by checking unique incident id's.</li>
+          <li><strong>Number of Incidents: </strong> Count of incidents calculated by checking unique incident number in original dataset.</li>
         </ol>
 
         <h3>Wrangling </h3>
         <p>The dataset is filtered and grouped with the filter function on the original website, and the range was chosen to be from January 2019 to December 2019.
-          Also the data are grouped by incident id, call type group, response date&time, and neighborhoods.</p>
+          Also the data are grouped by incident number, call type group, response date&time, and neighborhoods.</p>
         <p>For drawing the heatmap, a call-type-group map was created to better fit the format of counts of incidents rather than raw data given in the csv file.
           The new map stores by each call type group as keys and an array of 12 month's incidents count as values.</p>
         <p>For drawing the barchart, a bar-chart map was created since the bar chart looks for neighborhoods as keys. For each neighborhood, there are 5 call type groups as keys and each call type group links to a 12-month-value array
