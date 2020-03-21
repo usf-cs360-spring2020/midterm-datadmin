@@ -34,12 +34,6 @@ var y   = d3.scaleLinear().rangeRound([config.svg.height, 0]);
 d3.csv(csv).then(drawChart);
 
 
-function isNeighbor(Counting, name){
-  return Counting.keys === name;
-}
-function isCallType(Object, name){
-  return
-}
 function Frequency(data){
   const Counting =[];
   var numbers;

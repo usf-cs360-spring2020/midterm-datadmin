@@ -24,9 +24,10 @@
     <div class="hero-body">
       <div class="container">
         <!-- TODO: Change title -->
-        <h1 class="title">Bar + Pie charts for calls type and unit type console/h1>
+        <h1 class="title">Distribution of call types along the year
+in Sout of Market and Tenderloin</h1>
         <!-- TODO: Change subtitle -->
-        <h2 class="subtitle">With distribution of publishers</h2>
+        <!-- <h2 class="subtitle">With distribution of publishers</h2> -->
       </div>
     </div>
   </section>
@@ -74,48 +75,75 @@
       <div class="content">
         <h1 class="title">
           <!-- TODO: Change page title -->
-        Bar + Pie charts: calls type and unit type
+        Bar + Pie charts
         </h1>
+        <h5>
+          By Paul Ke
+        </h5>
         <p class="subtitle">
           <!-- TODO: Change page subtitle -->
         <!-- genre,year, platform, publisher for game sales -->
         </p>
+        <h3 id="Introduction">Introduction</h3>
+        This page is like a case study, my other team member provides a general fire department information and I am going to focus on two community: South of Market and Tenderloin. The reason why I choose this two community is theses two communities has most number of records than others. I want to illustrate that how many resource is going to be use in each record and does those resources be used efficiently and rightful.
 
         <p> </p>
-        <h2 id="data">Data</h2>
+        <h3 id="data">Data</h3>
 
         <ol>
           <li><strong>Unit Type: </strong> unit type</li>
 
           <li><strong>Neighborhoodr:</strong> two community: Tenderloin and South of Market.</li>
 
-          <li><strong>numbers of records:</strong> the numbers of records.</li>
+          <li><strong>Call Type Group: </strong>Call types are divided into four main groups: Fire, Alarm, Potential Life Threatening and Non Life Threatening.</li>
 
           <!-- <li><strong>Year:</strong> Year of the game's release.</li>
           <li><strong>Genre:</strong> different type of games.</li> -->
         </ol>
+        <p>
+          The column of bar chart shows the number of record for each call type group and the row of bar chart shows the community name and each call type name.
+The pie chart displays the ratio of each unity type response to the call type group. The bigger area the largest number record for the unity type
+        </p>
+
+        <h3>Instructions</h3>
+
+        <p> The bar chart shows that number of records for each call type group in this two community, different color represent different call type group, you can see the information in the legend. When you mouse over each bar in the bar chart, you will see the the ration of each unit type response to each call type group by showing in the Pie chart. Different color represent different unit type and you can see the information in the legend. </p>
+
 
         <!-- <h3 id="wrangling">Wrangling</h3> -->
 <!--
         <p> All the data warngling for prototypes are in Tableau: </p>
         <p> For the heatmap, the Year columns were filtered to only show the data of every 5 years since 1985; platform was filtered to only show famous home video game consoles.</p> -->
 
-        <h2 id="visualizations">Visualizations</h2>
+        <h3 id="visualizations">Visualizations</h3>
 
-        <h3>Here is the chart made by D3.js</h3>
+
+          <h3 width="30" height="30">Here is the chart made by D3.js</h3>
+          <div style="float: left;">
+          <img src="D3Symbol.png" width="60" height="60">
+        </div>
         <div id= "BarPieChart">
-        <div id="BarChart"></div>
-        <div id="PieChart"></div>
-        <script src="BarPie.js"></script>
+          <div id="BarChart"></div>
+          <div id="PieChart"></div>
+          <script src="BarPie.js"></script>
         </div>
 
-        <img src="Brown.png" width="1920" height="1000">
+
+
+        <h3 width="30" height="30">Here is the chart made by Tableau</h3>
+        <div id="block-delta-blocks-logo" class="block block--delta-blocks block--delta-blocks-logo block--delta-blocks-logo" width="60" height="60" style="float: left;">
+            <div class="block__content block__content" width="60" height="60">
+              <div class="logo-img" width="60" height="60">
+               <a href="/" id="logo" title="Return to the Tableau Software home page" width="60" height="60">
+                 <img typeof="foaf:Image" src="https://cdns.tblsft.com/sites/all/themes/tabwat/logo.png" alt="Tableau Software" width="240" height="240">
+               </a>
+              </div>
+           </div>
+       </div>
+       <img src="Prototype2.png" width="1920" height="1000">
         <!-- <img src="red.png" width="1920" height="1000"> -->
         <!-- <img src="Blue.png" width="1920" height="1000"> -->
         <!-- <img src="Green.png" width="1920" height="1000"> -->
-        <h4>Instructions</h4>
-
-        <p> The color of pie chart indicates the the ratio of each unit type response to the each call type in each community.</p>
 
 
 
@@ -125,8 +153,8 @@
           also in the year of 2005 the x360 appears but only had 8 publishers for games on it. In the year of 2010, x360 was selling better and is really close to PlayStation3's sales, but wii was far more popular than PlayStation and x360... It is interesting to see how the gaming consoles come and go and how their companies present new products in the competition.</p> -->
 
 
-        <h3> Planned interactivity</h3>
-        <p> In the next steps, this prototype would be implemented with clickable bar blocks that would show relative pie chart for that each call type with each unit type.</p>
+        <!-- <h3> Planned interactivity</h3>
+        <p> In the next steps, this prototype would be implemented with clickable bar blocks that would show relative pie chart for that each call type with each unit type.</p> -->
 
         <!-- <h3> Connection to the project theme</h3>
         <p> This visualization presents from the perspective of the component of market of gaming console(specifically on the home gaming consoles), and how games on each platform was occupied by various publishers. It is an observation on players, customers, producers and even hardware industries from the gaming console market shifting.</p> -->
