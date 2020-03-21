@@ -82,15 +82,22 @@
           Heatmap + bar chart by Alex Wang
         </p>
 
-        <p> </p>
+        <h2 id="intro">Introduction</h2>
+        <p> This visualization explores how the responded calls distributed along the year of 2019 -- is there any months or season that fires were more likely to happen?
+        Was there a period of time that SFFD were experiencing overwhelming workload? Also between the call type groups -- what kind of works were done the most by SFFD? Was fire rescuing the biggest part of SFFD's work?
+        For neighborhoods, which were the neighborhoods experienced most help from SFFD in 2019? Were types of calls to and help from SFFD distributed evenly in that neighborhood? </p>
+        <p>Those are question that we might want to know. Therefore, there is a heatmap that demonstrates how call type groups distributed among 12 months in 2019, and various bar charts that shows relative filtered data for each neighborhood.
+        </p>
         <h2 id="data">Data</h2>
-
+        <h3>Columns </h3>
         <ol>
-          <li><strong>Call type group: </strong> Call types are divided into four main groups: Fire, Alarm, Potential Life Threatening and Non Life Threatening.</li>
+          <li><strong>Call type group: </strong> Call types are divided into four main groups: Fire, Alarm, Potential Life Threatening and Non Life Threatening. Null type incident records in the dataset are still recorded because even if they are not categorized,
+            those incidents were still SFFD's work done.</li>
 
-          <li><strong>Response Date by Months: </strong> Date and time this unit acknowledges the dispatch and records that the unit is en route to the location of the call.</li>
+          <li><strong>Response Date by Months: </strong> Date and time this unit acknowledges the dispatch and records that the unit is en route to the location of the call.
+            This column was chosen over other timing columns because it is the amount of incidents tha SFFD respond to -- it reflects better on amount of their actual work. </li>
 
-          <li><strong>Neighborhoods: </strong> Neighborhood District associated with this address, boundaries available here: https://data.sfgov.org/d/p5b7-5n3h</li>
+          <li><strong>Neighborhoods: </strong> Neighborhood District associated with this address, boundaries available here: <a href= https://data.sfgov.org/d/p5b7-5n3h>https://data.sfgov.org/d/p5b7-5n3h</a></li>
 
           <li><strong>Number of Incidents: </strong> Count of incidents calculated by checking unique incident id's.</li>
         </ol>
@@ -108,9 +115,21 @@
         <h3 id="prototype"> Prototype by Tableau </h3>
         <img src="Prototype3.png" width="1440" height="900">
 
+
+
         <h3 id="d3v5">Implementation in D3.js</h3>
+
+        <h4>Instruction: how to interact</h4>
+        <p> For heatmap, readers can click on blocks on the heatmap to see the data for a specific month and a specific call type group. When a block is chosen, the bar chart would change according to the month and call type group and show values of every neighborhood.</p>
+        <p> For bar chart, when hovering one bar, that bar would be "highlighted" and its value would show.</p>
+
         <script src="https://d3js.org/d3.v5.min.js"></script>
+
+
         <div id="d3hm"></div>
+
+
+
 
         <script>
 
@@ -794,7 +813,6 @@
 
 
         <h4 id="writeup">Interpretation: data encoding</h4>
-
         <p>In the heatmap, the color diverging in boxes indicates the average daily count of unique incidents,
         the x-axis of heatmap is the response date and time of SFFD's action in months along the year of 2019,
         and y-axis is the call type. </p>
@@ -802,9 +820,6 @@
         The bar charts are not sorting by high-to-low values because it would be too much movements when each click of heatmap-block would cause a change: since there are 42 neighborhoods
         and fixed position of them would help the reader locate specific neighborhood more quickly. Also, for the same neighborhood readers could have a chance to see that it might be leading in one call type group, but not in another.</p>
 
-        <h4>Instruction: how to interact</h4>
-        <p> For heatmap, readers can click on blocks on the heatmap to see the data for a specific month and a specific call type group. When a block is chosen, the bar chart would change according to the month and call type group and show values of every neighborhood.</p>
-        <p> For bar chart, when hovering one bar, that bar would be "highlighted" and its value would show.</p>
         <h4>Discussion: findings</h4>
         <p> Firstly, in the heatmap, we could see the comparison between months to know that how the fire calls distributed: there is actually no obvious huge difference of numbers of fire incidents among months. Therefore it seems that fires are not more likely to happen in some seasons or holidays,
           and firefighters are not having obvious "busy season" according to information we have so far.</p>
