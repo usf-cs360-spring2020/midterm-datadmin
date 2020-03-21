@@ -53,8 +53,16 @@
             <span>Data</span>
           </a>
 
-          <a class="navbar-item" href="#visualizations" title="Data">
-            <span>Visualizations</span>
+          <a class="navbar-item" href="#prototype" title="Data">
+            <span>Visualization: prototype by Tableau</span>
+          </a>
+
+          <a class="navbar-item" href="#d3v5" title="Data">
+            <span>Visualization: implementation in D3.js</span>
+          </a>
+
+          <a class="navbar-item" href="#writeup" title="Data">
+            <span>Writeups</span>
           </a>
 
         </div>
@@ -68,10 +76,10 @@
       <!-- Begin page content -->
       <div class="content">
         <h1 class="title">
-          Heatmap + bar chart
+          Distribution of call types along the year of 2019
         </h1>
         <p class="subtitle">
-          by Alex Wang
+          Heatmap + bar chart by Alex Wang
         </p>
 
         <p> </p>
@@ -80,20 +88,20 @@
         <ol>
           <li><strong>Call type group: </strong> Call types are divided into four main groups: Fire, Alarm, Potential Life Threatening and Non Life Threatening.</li>
 
-          <li><strong>Response DtTm: </strong> Date and time this unit acknowledges the dispatch and records that the unit is en route to the location of the call.</li>
+          <li><strong>Response Date by Months: </strong> Date and time this unit acknowledges the dispatch and records that the unit is en route to the location of the call.</li>
 
-          <li><strong>Neighborhooods - Analysis Boundaries:</strong> Neighborhood District associated with this address, boundaries available here: https://data.sfgov.org/d/p5b7-5n3h</li>
+          <li><strong>Neighborhoods: </strong> Neighborhood District associated with this address, boundaries available here: https://data.sfgov.org/d/p5b7-5n3h</li>
 
-          <li><strong>Number of Incidents: </strong> Count of incidents.</li>
+          <li><strong>Number of Incidents: </strong> Count of incidents calculated by checking unique incident id's.</li>
         </ol>
 
 
-        <h2 id="visualizations">Visualizations</h2>
+        <h2>Visualizations</h2>
 
-        <h3> Prototype by Tableau </h3>
+        <h3 id="prototype"> Prototype by Tableau </h3>
         <img src="Prototype3.png" width="1440" height="900">
 
-        <h3>D3 version</h3>
+        <h3 id="d3v5">D3 version</h3>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <div id="d3hm"></div>
 
@@ -796,12 +804,10 @@
         return 'translate(' + x + ',' + y + ')';
       }
 
-
         </script>
-<!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO--><!--TODO-->
 
 
-        <h4>Instructions</h4>
+        <h4 id="writeup">Instructions</h4>
 
         <p> The color of boxes in heatmap indicates the count of unique incidents, the x-axis of heatmap is the response date and time of SFFD's action, and y-axis is the call type. In the bar chart, each bar is a neighborhood and length is the count of calls. </p>
 
