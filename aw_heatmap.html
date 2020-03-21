@@ -21,8 +21,8 @@
   <section class="hero is-primary is-bold">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">How are the various types of call responded along the year of 2019?</h1>
-        <h2 class="subtitle">And which neighborhoods are the firefighters mostly helping?</h2>
+        <h1 class="title">How were the various types of call responded along the year of 2019?</h1>
+        <h2 class="subtitle">And which neighborhoods were the firefighters mostly helping?</h2>
       </div>
     </div>
   </section>
@@ -108,7 +108,7 @@
         <h3 id="prototype"> Prototype by Tableau </h3>
         <img src="Prototype3.png" width="1440" height="900">
 
-        <h3 id="d3v5">D3 version</h3>
+        <h3 id="d3v5">Implementation in D3.js</h3>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <div id="d3hm"></div>
 
@@ -168,7 +168,6 @@
         // https://github.com/d3/d3-scale-chromatic
         scale.color = d3.scaleSequential(d3.interpolateOranges);
 
-
         let axis = {};  // axes for data
         axis.x = d3.axisBottom(scale.x);
         axis.x.tickPadding(0);
@@ -179,7 +178,6 @@
         let bcScale = {};
         let bcAxis = {};
         let bx, by;
-
 
         var callTypeGroupName = ["Fire", "Potentially Life-Threatening", "Alarm", "Non Life-threatening", "NullType"]
 
@@ -199,8 +197,6 @@
         d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap).then(drawTitleCaptions);
         console.log(nbhdNameList);
         drawColorLegend();
-
-
 
         function recordRow(row, index) {
 
@@ -299,7 +295,6 @@
 
 
       function getDailyAverage(map, key) {
-
         m = 0;
         while (m < 12) {
           if(m == 1) { // Feburary
@@ -313,7 +308,6 @@
         }
         return map;
       }
-
 
 
       function convertData(map) {
@@ -635,7 +629,6 @@
           }
         }
 
-
         barChartData.keys = nbhdNameList;
         w = 0;
         while(w < 5) {
@@ -695,15 +688,12 @@
             .append("rect")
             .attr("id", "bars")
             .attr("width", function(d) {
-          //    console.log(d.incidentCount);
               barLen = +(d.incidentCount) * amplifying;
               return barLen;})
             .attr("height", bcScale.y.bandwidth() - 3)
             .attr("x", plotX - 159)
             .attr("y", d => bcScale.y(d.area) + 291)
             .style("fill", "#1b70a7");
-
-
 
         rectangles.on("mouseover", function(d) {
           console.log(d.values[0].incidentCount);
@@ -728,16 +718,6 @@
           d3.selectAll("#batLabel").remove();
           d3.select(this).style("stroke", null);
         });
-
-
-
-
-
-
-
-
-
-
       }
 
 
