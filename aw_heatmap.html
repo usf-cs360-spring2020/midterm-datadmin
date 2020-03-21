@@ -21,8 +21,8 @@
   <section class="hero is-primary is-bold">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">Distribution of call types along the year</h1>
-        <h2 class="subtitle">In various neighborhoods</h2>
+        <h1 class="title">How were the various types of call responded along the year of 2019?</h1>
+        <h2 class="subtitle">And which neighborhoods were the firefighters mostly helping?</h2>
       </div>
     </div>
   </section>
@@ -76,7 +76,7 @@
       <!-- Begin page content -->
       <div class="content">
         <h1 class="title">
-          Distribution of call types along the year of 2019
+          Distribution of type of calls in months and in neighborhoods along the year of 2019
         </h1>
         <p class="subtitle">
           Heatmap + bar chart by Alex Wang
@@ -95,13 +95,20 @@
           <li><strong>Number of Incidents: </strong> Count of incidents calculated by checking unique incident id's.</li>
         </ol>
 
-
+        <h3>Wrangling </h3>
+        <p>The dataset is filtered and grouped with the filter function on the original website, and the range was chosen to be from January 2019 to December 2019.
+          Also the data are grouped by incident id, call type group, response date&time, and neighborhoods.</p>
+        <p>For drawing the heatmap, a call-type-group map was created to better fit the format of counts of incidents rather than raw data given in the csv file.
+          The new map stores by each call type group as keys and an array of 12 month's incidents count as values.</p>
+        <p>For drawing the barchart, a bar-chart map was created since the bar chart looks for neighborhoods as keys. For each neighborhood, there are 5 call type groups as keys and each call type group links to a 12-month-value array
+          as value.
+        </p>
         <h2>Visualizations</h2>
 
         <h3 id="prototype"> Prototype by Tableau </h3>
         <img src="Prototype3.png" width="1440" height="900">
 
-        <h3 id="d3v5">D3 version</h3>
+        <h3 id="d3v5">Implementation in D3.js</h3>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <div id="d3hm"></div>
 
@@ -161,7 +168,6 @@
         // https://github.com/d3/d3-scale-chromatic
         scale.color = d3.scaleSequential(d3.interpolateOranges);
 
-
         let axis = {};  // axes for data
         axis.x = d3.axisBottom(scale.x);
         axis.x.tickPadding(0);
@@ -172,7 +178,6 @@
         let bcScale = {};
         let bcAxis = {};
         let bx, by;
-
 
         var callTypeGroupName = ["Fire", "Potentially Life-Threatening", "Alarm", "Non Life-threatening", "NullType"]
 
@@ -192,8 +197,6 @@
         d3.csv(csv, recordRow).then(convertData).then(drawAxis).then(drawHeatmap).then(drawTitleCaptions);
         console.log(nbhdNameList);
         drawColorLegend();
-
-
 
         function recordRow(row, index) {
 
@@ -292,7 +295,6 @@
 
 
       function getDailyAverage(map, key) {
-
         m = 0;
         while (m < 12) {
           if(m == 1) { // Feburary
@@ -306,7 +308,6 @@
         }
         return map;
       }
-
 
 
       function convertData(map) {
@@ -628,7 +629,6 @@
           }
         }
 
-
         barChartData.keys = nbhdNameList;
         w = 0;
         while(w < 5) {
@@ -688,15 +688,12 @@
             .append("rect")
             .attr("id", "bars")
             .attr("width", function(d) {
-          //    console.log(d.incidentCount);
               barLen = +(d.incidentCount) * amplifying;
               return barLen;})
             .attr("height", bcScale.y.bandwidth() - 3)
             .attr("x", plotX - 159)
             .attr("y", d => bcScale.y(d.area) + 291)
             .style("fill", "#1b70a7");
-
-
 
         rectangles.on("mouseover", function(d) {
           console.log(d.values[0].incidentCount);
@@ -721,16 +718,6 @@
           d3.selectAll("#batLabel").remove();
           d3.select(this).style("stroke", null);
         });
-
-
-
-
-
-
-
-
-
-
       }
 
 
@@ -807,9 +794,15 @@
         </script>
 
 
-        <h4 id="writeup">Instructions</h4>
+        <h4 id="writeup">Interpretation</h4>
 
-        <p> The color of boxes in heatmap indicates the count of unique incidents, the x-axis of heatmap is the response date and time of SFFD's action, and y-axis is the call type. In the bar chart, each bar is a neighborhood and length is the count of calls. </p>
+        <p>In the heatmap, the color diverging in boxes indicates the count of unique incidents, </p>
+        <p>the x-axis of heatmap is the response date and time of SFFD's action in months along the year of 2019, </p>
+        <p>and y-axis is the call type. </p>
+        <p>In the bar chart, each bar represents a neighborhood and the length of bar is the count of incidents. The longer the bar, the more incidents were in that neighborhood.</p>
+
+        <h4>Instruction</h4>
+        <p> </p>
 
         <h4>Discussion</h4>
         <p> Firstly, in the heatmap, we could see the comparison between months that how the fire calls distributed, that there is no huge difference of number of calls among months. Also from the y-axis we could see the comparison between different types of calls, such as "potentially life-threatening" has much more number of call than that of other types.
